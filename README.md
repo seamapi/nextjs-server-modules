@@ -3,9 +3,9 @@
 A NextJS Server Module is a NextJS project that has been packaged to be easily
 used as an npm module. You might use a server module to...
 
-* Package a "fake" or "mock" server for easy use in test suites
-* Allow another server to easily "call into" your NextJS server
-* Improve the organization of a large project by organizing NextJS servers into
+- Package a "fake" or "mock" server for easy use in test suites
+- Allow another server to easily "call into" your NextJS server
+- Improve the organization of a large project by organizing NextJS servers into
   server sub-components
 
 ## Usage
@@ -16,3 +16,64 @@ You can now add a build script or just run `nsm build`
 
 The build process will output a `dist/index.js` file which can be used to
 create your server or invoke requests against it
+
+```ts
+import myNextJSModule from "./dist/index.js"
+
+const server = await myNextJSModule.startServer({ port: 3030 })
+
+// your server is running on localhost:3030!
+
+server.close()
+```
+
+### Middlewares
+
+You can provide middlewares to your server like so:
+
+```ts
+import myNextJSModule from "./dist/index.js"
+
+const myMiddleware = (next) => (req, res) => {
+  req.token = req.headers.get("authorization").split("Bearer ")?.[1]
+  return next(req, res)
+}
+
+const server = await myNextJSModule.startServer({
+  port: 3030,
+  middlewares: [myMiddleware],
+})
+
+// your server is running on localhost:3030!
+
+server.close()
+```
+
+## Internal: How it Works
+
+> Not all NextJS features are currently supported. Particularly:
+>
+> - SSR
+> - getStaticProps
+
+First we build the static site for the nextjs project using `next export`, we'll
+serve these pages statically in our module.
+
+Next, we build the api endpoints with `next build`. We then analyze
+`.next/server/pages/api` to get all the api routes to server.
+
+We then construct a main export file that knows how to parse `next.config.js`
+and route to the correct files, which we've statically analyzed and are included
+in the generated `dist/index.js` file.
+
+## FAQ
+
+### Why can't next.js bundle into an npm module?
+
+You can bundle nextjs into npm modules, but some static analysis isn't available
+since nextjs uses the directory structure to determine what to load in at
+runtime.
+
+You'll also have problems running a `next` server within a vercel endpoint,
+because some vercel optimizations get rid of some webpack/next modules as an
+optimization.

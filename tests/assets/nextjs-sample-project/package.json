@@ -1,0 +1,20 @@
+{
+  "name": "example-nextjs-proj",
+  "version": "1.0.3",
+  "main": "index.js",
+  "repository": {
+    "url": "https://github.com/hello-seam/nextjs-health-endpoint-module"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "next build",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@types/react": "^17.0.37",
+    "next": "^12.0.7",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "typescript": "^4.5.4"
+  }
+}
