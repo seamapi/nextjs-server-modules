@@ -56,11 +56,8 @@ server.close()
 > - SSR
 > - getStaticProps
 
-First we build the static site for the nextjs project using `next export`, we'll
-serve these pages statically in our module.
-
-Next, we build the api endpoints with `next build`. We then analyze
-`.next/server/pages/api` to get all the api routes to server.
+We build the api endpoints and export static pages with `next build`. We then
+analyze `.next/server/pages/api` to get all the api routes to server.
 
 We then construct a main export file that knows how to parse `next.config.js`
 and route to the correct files, which we've statically analyzed and are included
