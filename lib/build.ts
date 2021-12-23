@@ -18,4 +18,5 @@ export const build = async ({ dir }: BuildOptions) => {
   const staticDir = `${nextDir}/static`
   const pagesDir = `${nextDir}/server/pages`
 }
+
 export default build
