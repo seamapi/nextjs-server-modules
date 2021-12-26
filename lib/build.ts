@@ -3,6 +3,7 @@ const path = require("path")
 const rimraf = require("rmfr")
 const copyDir = require("recursive-copy")
 const prettier = require("prettier")
+const fs = require("fs/promises")
 
 export interface BuildOptions {
   dir: string
@@ -54,6 +55,8 @@ export const build = async ({ dir, outDir }: BuildOptions) => {
       .join(",")} }`,
     { semi: false }
   )
+
+  await fs.writeFile(path.resolve(outDir, "routes.js"), routesFile)
 
   console.log(routesFile)
 }
