@@ -26,6 +26,7 @@ export const build = async ({ dir }: BuildOptions) => {
   server/pages/api/health.nft.json
   server/pages/404.html
   server/pages/500.html
+  server/pages/_error.js
 
   static/chunks/frame-e02.js
   static/chunks/pages/file.js
