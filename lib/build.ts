@@ -1,8 +1,16 @@
+const glob = require("glob-promise")
+const path = require("path")
+const rimraf = require("rmfr")
+const copyDir = require("recursive-copy")
+const prettier = require("prettier")
+
 export interface BuildOptions {
   dir: string
+  outDir: string
 }
-export const build = async ({ dir }: BuildOptions) => {
-  console.log({ dir })
+export const build = async ({ dir, outDir }: BuildOptions) => {
+  outDir = path.resolve(outDir)
+  console.log({ dir, outDir })
   try {
     require.resolve(`${dir}/node_modules/next`)
   } catch (e) {
@@ -18,6 +26,9 @@ export const build = async ({ dir }: BuildOptions) => {
   const staticDir = `${nextDir}/static`
   const pagesDir = `${nextDir}/server/pages`
 
+  await rimraf(outDir)
+  await copyDir(nextDir, path.join(outDir, ".next"))
+
   /*
 
   Example .next directory structure:
@@ -31,8 +42,20 @@ export const build = async ({ dir }: BuildOptions) => {
   static/chunks/frame-e02.js
   static/chunks/pages/file.js
 
-
   */
+
+  const allPageFiles = await glob("**/*.js", { cwd: pagesDir })
+
+  const routesFile = prettier.format(
+    `export default { ${allPageFiles
+      .map(
+        (fp) => `"${fp.split(".js")[0]}": require("./.next/server/pages/${fp}")`
+      )
+      .join(",")} }`,
+    { semi: false }
+  )
+
+  console.log(routesFile)
 }
 
 export default build
