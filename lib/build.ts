@@ -17,6 +17,21 @@ export const build = async ({ dir }: BuildOptions) => {
   const nextDir = `${dir}/.next`
   const staticDir = `${nextDir}/static`
   const pagesDir = `${nextDir}/server/pages`
+
+  /*
+
+  Example .next directory structure:
+
+  server/pages/api/health.js
+  server/pages/api/health.nft.json
+  server/pages/404.html
+  server/pages/500.html
+
+  static/chunks/frame-e02.js
+  static/chunks/pages/file.js
+
+
+  */
 }
 
 export default build
