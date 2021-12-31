@@ -1,11 +1,9 @@
-import glob from "glob-promise"
-import path from "path"
-import rimraf from "rmfr"
-import copyDir from "recursive-copy"
-import prettier from "prettier"
-import fs from "fs/promises"
+const glob = require("glob-promise")
+const path = require("path")
+const prettier = require("prettier")
+const fs = require("fs/promises")
 
-export async function generateRoutes() {
+async function generateRoutes() {
   const pagesDir = path.resolve(__dirname, "../../.next/server/pages")
   const allPageFiles = (await glob("**/*", { cwd: pagesDir })).filter(
     (fp) => !fp.endsWith(".nft.json") && fp.includes(".")
@@ -27,6 +25,8 @@ export async function generateRoutes() {
     routesFile
   )
 }
+
+module.exports = { generateRoutes }
 
 if (!module.parent) {
   generateRoutes()
