@@ -1,5 +1,5 @@
 import test from "ava"
-import build from "lib/build"
+import { build } from "lib/build"
 import path from "path"
 import tempy from "tempy"
 import getPort from "get-port"
