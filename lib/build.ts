@@ -26,9 +26,16 @@ export const build = async ({ dir, outDir }: BuildOptions) => {
   const nextDir = `${dir}/.next`
   const staticDir = `${nextDir}/static`
   const pagesDir = `${nextDir}/server/pages`
+  const packageJSON = JSON.parse(await fs.readFile(`${dir}/package.json`))
 
   await rimraf(outDir)
   await copyDir(nextDir, path.join(outDir, ".next"))
+  await copyDir(`${dir}/node_modules`, path.join(outDir, "node_modules"))
+
+  await fs.writeFile(
+    path.resolve(outDir, "package.json"),
+    JSON.stringify(packageJSON)
+  )
 
   /*
 
