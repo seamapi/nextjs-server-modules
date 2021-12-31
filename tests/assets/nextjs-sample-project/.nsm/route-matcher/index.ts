@@ -21,10 +21,10 @@ export default (routeMapping) => {
   // TODO sort routes to fix precedence
 
   return (incomingPath) => {
-    for (const { serverFunc, matcherFunc } of routes) {
+    for (const { serverFunc, matcherFunc, fsPath } of routes) {
       const match = matcherFunc(incomingPath)
       if (match) {
-        return { serverFunc, match }
+        return { serverFunc, match, fsPath }
       }
     }
     return null

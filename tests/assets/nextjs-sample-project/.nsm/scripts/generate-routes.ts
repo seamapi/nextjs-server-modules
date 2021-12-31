@@ -7,13 +7,16 @@ import fs from "fs/promises"
 
 async function main() {
   const pagesDir = path.resolve(__dirname, "../../.next/server/pages")
-  const allPageFiles = await glob("**/*.js", { cwd: pagesDir })
+  const allPageFiles = (await glob("**/*", { cwd: pagesDir })).filter(
+    (fp) => !fp.endsWith(".nft.json") && fp.includes(".")
+  )
 
   const routesFile = prettier.format(
-    `export default { ${allPageFiles
-      .map(
-        (fp) =>
-          `"/${fp.split(".js")[0]}": require("../.next/server/pages/${fp}")`
+    `import path from "path"\n\nexport default { ${allPageFiles
+      .map((fp) =>
+        fp.startsWith("api")
+          ? `"/${fp.split(".js")[0]}": require("../.next/server/pages/${fp}")`
+          : `"/${fp}": path.resolve(__dirname, "../.next/server/pages/${fp}")`
       )
       .join(",")} }`,
     { semi: false }

@@ -21,6 +21,7 @@
     "content-type": "^1.0.4",
     "cookie": "^0.4.1",
     "esbuild-runner": "^2.2.1",
-    "raw-body": "^2.4.2"
+    "raw-body": "^2.4.2",
+    "serve-handler": "^6.1.3"
   }
 }
