@@ -9,11 +9,12 @@ import serveHandler from "serve-handler"
 import fs from "fs/promises"
 import path from "path"
 import Debug from "debug"
+import wrappers from "@seamapi/wrappers"
 
 const debug = Debug("nsm")
 
 export const runServer = async ({ port, staticDir = "", middlewares = [] }) => {
-  debug.log(`starting server on port ${port}`)
+  debug(`starting server on port ${port}`)
   if (!staticDir) {
     staticDir = path.resolve(__dirname, "../.next/static")
   }
@@ -40,7 +41,17 @@ export const runServer = async ({ port, staticDir = "", middlewares = [] }) => {
       res.end("404") // TODO use routes 404
       return
     }
-    await apiResolver(req, res, { ...query, ...match }, serverFunc, {}, false)
+
+    const wrappedServerFunc = (wrappers as any)(...[...middlewares, serverFunc])
+
+    await apiResolver(
+      req,
+      res,
+      { ...query, ...match },
+      wrappedServerFunc,
+      {},
+      false
+    )
   })
   server.listen({ port })
   return server
