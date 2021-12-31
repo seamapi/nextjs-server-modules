@@ -9,9 +9,8 @@ export interface BuildOptions {
   dir: string
   outDir: string
 }
-export const build = async ({ dir, outDir }: BuildOptions) => {
-  outDir = path.resolve(outDir)
-  console.log({ dir, outDir })
+export const build = async ({ dir }: BuildOptions) => {
+  console.log({ dir })
   try {
     require.resolve(`${dir}/node_modules/next`)
   } catch (e) {
@@ -27,45 +26,13 @@ export const build = async ({ dir, outDir }: BuildOptions) => {
   const staticDir = `${nextDir}/static`
   const pagesDir = `${nextDir}/server/pages`
   const packageJSON = JSON.parse(await fs.readFile(`${dir}/package.json`))
+  const nsmDir = `${dir}/.nsm`
 
-  await rimraf(outDir)
-  await copyDir(nextDir, path.join(outDir, ".next"))
-  await copyDir(`${dir}/node_modules`, path.join(outDir, "node_modules"))
+  await rimraf(nsmDir)
+  await copyDir(path.resolve(__dirname, "../nsm"), nsmDir)
 
-  await fs.writeFile(
-    path.resolve(outDir, "package.json"),
-    JSON.stringify(packageJSON)
-  )
-
-  /*
-
-  Example .next directory structure:
-
-  server/pages/api/health.js
-  server/pages/api/health.nft.json
-  server/pages/404.html
-  server/pages/500.html
-  server/pages/_error.js
-
-  static/chunks/frame-e02.js
-  static/chunks/pages/file.js
-
-  */
-
-  const allPageFiles = await glob("**/*.js", { cwd: pagesDir })
-
-  const routesFile = prettier.format(
-    `export default { ${allPageFiles
-      .map(
-        (fp) => `"${fp.split(".js")[0]}": require("./.next/server/pages/${fp}")`
-      )
-      .join(",")} }`,
-    { semi: false }
-  )
-
-  await fs.writeFile(path.resolve(outDir, "routes.js"), routesFile)
-
-  console.log(routesFile)
+  // Run the generateRoutes command
+  await require(`${dir}/.nsm/scripts/generate-routes.ts`).generateRoutes()
 }
 
 export default build

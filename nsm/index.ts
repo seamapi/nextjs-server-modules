@@ -8,8 +8,12 @@ import querystring from "querystring"
 import serveHandler from "serve-handler"
 import fs from "fs/promises"
 import path from "path"
+import Debug from "debug"
+
+const debug = Debug("nsm")
 
 export const runServer = async ({ port, staticDir = "", middlewares = [] }) => {
+  debug.log(`starting server on port ${port}`)
   if (!staticDir) {
     staticDir = path.resolve(__dirname, "../.next/static")
   }
@@ -39,6 +43,7 @@ export const runServer = async ({ port, staticDir = "", middlewares = [] }) => {
     await apiResolver(req, res, { ...query, ...match }, serverFunc, {}, false)
   })
   server.listen({ port })
+  return server
 }
 
 if (!module.parent) {

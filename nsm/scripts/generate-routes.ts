@@ -5,7 +5,7 @@ import copyDir from "recursive-copy"
 import prettier from "prettier"
 import fs from "fs/promises"
 
-async function main() {
+export async function generateRoutes() {
   const pagesDir = path.resolve(__dirname, "../../.next/server/pages")
   const allPageFiles = (await glob("**/*", { cwd: pagesDir })).filter(
     (fp) => !fp.endsWith(".nft.json") && fp.includes(".")
@@ -29,5 +29,5 @@ async function main() {
 }
 
 if (!module.parent) {
-  main()
+  generateRoutes()
 }
