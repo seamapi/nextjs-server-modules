@@ -7,10 +7,8 @@ const fs = require("fs/promises")
 
 export interface BuildOptions {
   dir: string
-  outDir: string
 }
 export const build = async ({ dir }: BuildOptions) => {
-  console.log({ dir })
   try {
     require.resolve(`${dir}/node_modules/next`)
   } catch (e) {
