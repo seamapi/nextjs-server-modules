@@ -1,6 +1,6 @@
 {
   "name": "nextjs-server-modules",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "main": "bin.js",
   "repository": "git@github.com:hello-seam/nextjs-server-modules.git",
   "author": "seveibar <seveibar@gmail.com>",
