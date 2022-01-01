@@ -1,6 +1,7 @@
 const path = require("path")
 const prettier = require("prettier")
 const fs = require("fs/promises")
+const { existsSync } = require("fs")
 
 async function generateRoutes() {
   const pagesDir = path.resolve(__dirname, "../../.next/server/pages")
@@ -14,11 +15,12 @@ async function generateRoutes() {
 
 export default {
   ${Object.entries(pagesManifest)
-    .map(([route, fp]) =>
-      fp.startsWith("pages/api")
-        ? `"${route}": require("../${fp}")`
-        : `"${route}": path.resolve(__dirname, "../.next/server/${fp}")`
-    )
+    .map(([route, fp]) => {
+      if (!fp.startsWith("pages/api")) {
+        return `"${route}": path.resolve(__dirname, "../.next/server/${fp}")`
+      }
+      return `"${route}": require("../${fp.split(".")[0]}")`
+    })
     .join(",")}
 }
 
