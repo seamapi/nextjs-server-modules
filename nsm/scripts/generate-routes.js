@@ -10,18 +10,29 @@ async function generateRoutes() {
   )
 
   const routesFile = prettier.format(
-    `import path from "path"\n\nexport default { ${allPageFiles
-      .map((fp) =>
-        fp.startsWith("api")
-          ? `"/${fp.split(".js")[0]}": require("../.next/server/pages/${fp}")`
-          : `"/${fp}": path.resolve(__dirname, "../.next/server/pages/${fp}")`
-      )
-      .join(",")} }`,
+    `const path = require("path")
+
+Object.defineProperty(exports, "__esModule", {
+  value: true,
+})
+exports.default = void 0
+var _default = {
+  ${allPageFiles
+    .map((fp) =>
+      fp.startsWith("api")
+        ? `"/${fp.split(".js")[0]}": require("../.next/server/pages/${fp}")`
+        : `"/${fp}": path.resolve(__dirname, "../.next/server/pages/${fp}")`
+    )
+    .join(",")}
+}
+exports.default = _default
+
+`,
     { semi: false }
   )
 
   await fs.writeFile(
-    path.resolve(__dirname, "../generated_routes.ts"),
+    path.resolve(__dirname, "../generated_routes.js"),
     routesFile
   )
 }
