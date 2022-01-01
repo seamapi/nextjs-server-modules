@@ -8,19 +8,22 @@ used as an npm module. You might use a server module to...
 - Improve the organization of a large project by organizing NextJS servers into
   server sub-components
 
+The `nextjs-server-module` cli will help you create a custom nextjs runtime
+to run your projects with, so they can be run without nextjs at runtime.
+
 ## Usage
 
 First, install with `npm install nextjs-server-module`
 
 You can now add a build script or just run `nsm build`
 
-The build process will output a `dist/index.js` file which can be used to
+The build process will output a `.nsm/index.ts` file which can be used to
 create your server or invoke requests against it
 
 ```ts
-import myNextJSModule from "./dist/index.js"
+import myNextJSModule from "./.nsm"
 
-const server = await myNextJSModule.startServer({ port: 3030 })
+const server = await myNextJSModule({ port: 3030 })
 
 // your server is running on localhost:3030!
 
@@ -32,14 +35,14 @@ server.close()
 You can provide middlewares to your server like so:
 
 ```ts
-import myNextJSModule from "./dist/index.js"
+import myNextJSModule from "./.nsm"
 
 const myMiddleware = (next) => (req, res) => {
   req.token = req.headers.get("authorization").split("Bearer ")?.[1]
   return next(req, res)
 }
 
-const server = await myNextJSModule.startServer({
+const server = await myNextJSModule({
   port: 3030,
   middlewares: [myMiddleware],
 })
