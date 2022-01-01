@@ -61,7 +61,9 @@ export const runServer = async ({ port, staticDir = "", middlewares = [] }) => {
       return
     }
 
-    const wrappedServerFunc = (wrappers as any)(...[...middlewares, serverFunc])
+    const wrappedServerFunc = (wrappers as any)(
+      ...[...middlewares, serverFunc?.default || serverFunc]
+    )
 
     await apiResolver(
       req,
