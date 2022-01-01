@@ -4,6 +4,7 @@ import { Stream } from "stream"
 import getRawBody from "raw-body"
 import { parse } from "content-type"
 import { NextApiRequest, NextApiResponse } from "../types/nextjs"
+import { serialize } from "cookie"
 
 export type NextApiRequestCookies = { [key: string]: string }
 export type NextApiRequestQuery = { [key: string]: string | string[] }
@@ -390,36 +391,37 @@ export function tryGetPreviewData(
 
   const tokenPreviewData = cookies[COOKIE_NAME_PRERENDER_DATA]
 
-  const jsonwebtoken =
-    require("next/dist/compiled/jsonwebtoken") as typeof import("jsonwebtoken")
+  // const jsonwebtoken =
+  //   require("next/dist/compiled/jsonwebtoken") as typeof import("jsonwebtoken")
   let encryptedPreviewData: {
     data: string
   }
   try {
-    encryptedPreviewData = jsonwebtoken.verify(
-      tokenPreviewData,
-      options.previewModeSigningKey
-    ) as typeof encryptedPreviewData
+    // encryptedPreviewData = jsonwebtoken.verify(
+    //   tokenPreviewData,
+    //   options.previewModeSigningKey
+    // ) as typeof encryptedPreviewData
   } catch {
     // TODO: warn
     clearPreviewData(res as NextApiResponse)
     return false
   }
 
-  const decryptedPreviewData = decryptWithSecret(
-    Buffer.from(options.previewModeEncryptionKey),
-    encryptedPreviewData.data
-  )
+  // const decryptedPreviewData = decryptWithSecret(
+  //   Buffer.from(options.previewModeEncryptionKey),
+  //   encryptedPreviewData.data
+  // )
 
   try {
     // TODO: strict runtime type checking
-    const data = JSON.parse(decryptedPreviewData)
+    // const data = JSON.parse(decryptedPreviewData)
     // Cache lookup
-    Object.defineProperty(req, SYMBOL_PREVIEW_DATA, {
-      value: data,
-      enumerable: false,
-    })
-    return data
+    // Object.defineProperty(req, SYMBOL_PREVIEW_DATA, {
+    //   value: data,
+    //   enumerable: false,
+    // })
+    // return data
+    return null
   } catch {
     return false
   }
@@ -473,8 +475,6 @@ function setPreviewData<T>(
   //   )
   // }
 
-  const { serialize } =
-    require("next/dist/compiled/cookie") as typeof import("cookie")
   const previous = res.getHeader("Set-Cookie")
   res.setHeader(`Set-Cookie`, [
     ...(typeof previous === "string"
@@ -509,8 +509,6 @@ function clearPreviewData<T>(res: NextApiResponse<T>): NextApiResponse<T> {
     return res
   }
 
-  const { serialize } =
-    require("next/dist/compiled/cookie") as typeof import("cookie")
   const previous = res.getHeader("Set-Cookie")
   res.setHeader(`Set-Cookie`, [
     ...(typeof previous === "string"

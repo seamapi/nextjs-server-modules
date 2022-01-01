@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: "14.x"
           registry-url: "https://registry.npmjs.org"
-      - name: Install dependencies
-        run: npm install
+      - run: yarn install
+      - run: yarn build
       - name: Release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.SEAMAPI_NPM_TOKEN }}

@@ -1,6 +1,5 @@
 import routes from "./generated_routes"
 import micro from "micro"
-import getPort from "get-port"
 import { apiResolver } from "./nextjs-middleware/api-utils"
 import { IncomingMessage } from "http"
 import getRouteMatcher from "./route-matcher"
@@ -58,6 +57,7 @@ export const runServer = async ({ port, staticDir = "", middlewares = [] }) => {
 }
 
 if (!module.parent) {
+  console.log("starting server at http://localhost:3000")
   runServer({ port: 3000 })
 }
 

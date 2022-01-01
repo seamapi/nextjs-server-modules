@@ -1,9 +1,12 @@
 {
   "name": "nextjs-server-modules",
   "version": "1.2.3",
-  "main": "index.js",
+  "main": "bin.js",
   "repository": "git@github.com:hello-seam/nextjs-server-modules.git",
   "author": "seveibar <seveibar@gmail.com>",
+  "scripts": {
+    "build": "tsup --dts --sourcemap ./nsm ./lib"
+  },
   "bin": {
     "nsm": "./bin.js"
   },
@@ -23,10 +26,12 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "tempy": "1",
+    "tsup": "^5.11.10",
     "typescript": "^4.5.4"
   },
   "dependencies": {
     "@seamapi/wrappers": "^1.0.1",
+    "cookie": "^0.4.1",
     "debug": "^4.3.3",
     "execa": "^6.0.0",
     "glob": "^7.2.0",

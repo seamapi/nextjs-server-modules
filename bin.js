@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-require("./lib/cli.js").default()
+require("./dist/lib/cli.js").default()
