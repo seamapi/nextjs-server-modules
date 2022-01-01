@@ -10,6 +10,7 @@ import path from "path"
 import Debug from "debug"
 import wrappers from "@seamapi/wrappers"
 import resolveRewrites from "./nextjs-middleware/resolve-rewrites"
+import nextConfig from "./next.config"
 
 const debug = Debug("nsm")
 
@@ -18,10 +19,6 @@ export const runServer = async ({ port, staticDir = "", middlewares = [] }) => {
   if (!staticDir) {
     staticDir = path.resolve(__dirname, "../.next/static")
   }
-  let nextConfig = {}
-  try {
-    nextConfig = require(path.resolve(__dirname, "../.next/next.config.js"))
-  } catch (e) {}
 
   const routeMatcher = getRouteMatcher(routes)
   const server = micro(async (req: IncomingMessage, res) => {
@@ -34,6 +31,7 @@ export const runServer = async ({ port, staticDir = "", middlewares = [] }) => {
         afterFiles: [],
         beforeFiles: [],
         fallback: [],
+        ...(nextConfig as any).rewrites,
       },
       query,
       (s) => s
