@@ -10,7 +10,6 @@ async function generateRoutes() {
   const staticDir = path.resolve(nextDir, "static")
 
   const staticFiles = (await glob("**/*", { cwd: staticDir }))
-    .filter((fp) => fp.includes("."))
     .map((fp) => `static/${fp}`)
     .concat(
       (await glob("**/*", { cwd: pagesDir }))
@@ -18,6 +17,7 @@ async function generateRoutes() {
         .filter((fp) => !fp.endsWith(".nft.json"))
         .map((fp) => `server/pages/${fp}`)
     )
+    .filter((fp) => fp.includes("."))
 
   const pagesManifest = JSON.parse(
     await fs.readFile(path.resolve(pagesDir, "../pages-manifest.json"))

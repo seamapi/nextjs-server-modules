@@ -25,8 +25,6 @@ test("build and check health", async (t) => {
 
   t.truthy(res.includes("healthy!"))
 
-  // check GET /somepage
-
   const { data: htmlRes } = await axios.get(`http://localhost:${port}/somepage`)
 
   t.truthy(htmlRes.includes("Count"))
