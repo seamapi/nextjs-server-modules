@@ -20,7 +20,7 @@ async function generateRoutes() {
   ${Object.entries(pagesManifest)
     .map(([route, fp]) =>
       fp.startsWith("pages/api")
-        ? `"${route}": require("../${fp}")`
+        ? `"${route}": require("../${fp.split(".")[0]}")`
         : `"${route}": require.resolve("../.next/server/${fp}")`
     )
     .join(",")},
