@@ -1,27 +1,32 @@
+const glob = require("glob-promise")
 const path = require("path")
 const prettier = require("prettier")
 const fs = require("fs/promises")
-const { existsSync } = require("fs")
 
 async function generateRoutes() {
   const pagesDir = path.resolve(__dirname, "../../.next/server/pages")
+  const staticDir = path.resolve(__dirname, "../../.next/static")
+
+  const staticFiles = (await glob("**/*", { cwd: staticDir })).filter((fp) =>
+    fp.includes(".")
+  )
 
   const pagesManifest = JSON.parse(
     await fs.readFile(path.resolve(pagesDir, "../pages-manifest.json"))
   )
 
   const routesFile = prettier.format(
-    `import path from "path"
-
-export default {
+    `export default {
   ${Object.entries(pagesManifest)
-    .map(([route, fp]) => {
-      if (!fp.startsWith("pages/api")) {
-        return `"${route}": path.resolve(__dirname, "../.next/server/${fp}")`
-      }
-      return `"${route}": require("../${fp.split(".")[0]}")`
-    })
-    .join(",")}
+    .map(([route, fp]) =>
+      fp.startsWith("pages/api")
+        ? `"${route}": require("../${fp}")`
+        : `"${route}": require.resolve("../.next/server/${fp}")`
+    )
+    .join(",")},
+    ${staticFiles.map(
+      (fp) => `"/_next/static/${fp}": require.resolve("../.next/static/${fp}")`
+    )}
 }
 
 `,
