@@ -63,3 +63,23 @@ export type NextApiHandler<T = any> = (
   req: NextApiRequest,
   res: NextApiResponse<T>
 ) => void | Promise<void>
+
+export type RouteHas =
+  | {
+      type: "header" | "query" | "cookie"
+      key: string
+      value?: string
+    }
+  | {
+      type: "host"
+      key?: undefined
+      value: string
+    }
+
+export type Rewrite = {
+  source: string
+  destination: string
+  basePath?: false
+  locale?: false
+  has?: RouteHas[]
+}

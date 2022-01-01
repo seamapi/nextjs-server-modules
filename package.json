@@ -5,7 +5,7 @@
   "repository": "git@github.com:hello-seam/nextjs-server-modules.git",
   "author": "seveibar <seveibar@gmail.com>",
   "scripts": {
-    "build": "rimraf ./dist && swc ./lib -d ./dist/lib && swc ./nsm -d ./dist/nsm"
+    "build:old": "rimraf ./dist && swc ./lib -d ./dist/lib && swc ./nsm -d ./dist/nsm"
   },
   "bin": {
     "nsm": "./bin.js"
@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@seamapi/wrappers": "^1.0.1",
+    "path-to-regexp": "^6.2.0",
     "cookie": "^0.4.1",
     "debug": "^4.3.3",
     "execa": "^6.0.0",

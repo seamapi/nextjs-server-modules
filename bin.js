@@ -1,3 +1,4 @@
 #!/usr/bin/env node
 
-require("./dist/lib/cli.js").default()
+require("esbuild-runner/register")
+require("./lib/cli.js").default()
