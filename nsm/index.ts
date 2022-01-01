@@ -4,7 +4,6 @@ import { apiResolver } from "./nextjs-middleware/api-utils"
 import { IncomingMessage } from "http"
 import getRouteMatcher from "./route-matcher"
 import querystring from "querystring"
-import serveHandler from "serve-handler"
 import fs from "fs/promises"
 import path from "path"
 import Debug from "debug"
@@ -14,11 +13,8 @@ import nextConfig from "./next.config"
 
 const debug = Debug("nsm")
 
-export const runServer = async ({ port, staticDir = "", middlewares = [] }) => {
+export const runServer = async ({ port, middlewares = [] }) => {
   debug(`starting server on port ${port}`)
-  if (!staticDir) {
-    staticDir = path.resolve(__dirname, "../.next/static")
-  }
 
   const routeMatcher = getRouteMatcher(routes)
   const server = micro(async (req: IncomingMessage, res) => {
@@ -41,14 +37,6 @@ export const runServer = async ({ port, staticDir = "", middlewares = [] }) => {
 
     req.url = req.url.split("?")[0]
 
-    if (req.url.startsWith("/_next/static")) {
-      req.url = req.url.replace(/^\/_next\/static/, "")
-      await serveHandler(req, res, {
-        cleanUrls: true,
-        public: staticDir,
-      })
-      return
-    }
     const { serverFunc, match, fsPath } = routeMatcher(req.url) || {}
     if (typeof serverFunc === "string") {
       res.statusCode = 200
