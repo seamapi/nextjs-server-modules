@@ -5,7 +5,7 @@
   "repository": "git@github.com:hello-seam/nextjs-server-modules.git",
   "author": "seveibar <seveibar@gmail.com>",
   "scripts": {
-    "build": "tsup --dts --sourcemap ./nsm ./lib"
+    "build": "rimraf ./dist && swc ./lib -d ./dist/lib && swc ./nsm -d ./dist/nsm"
   },
   "bin": {
     "nsm": "./bin.js"
@@ -16,6 +16,8 @@
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^8.0.3",
     "@semantic-release/release-notes-generator": "^10.0.3",
+    "@swc/cli": "^0.1.55",
+    "@swc/core": "^1.2.124",
     "@types/node": "^17.0.5",
     "ava": "^3.15.0",
     "axios": "^0.24.0",
