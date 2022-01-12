@@ -66,9 +66,4 @@ export const runServer = async ({ port, middlewares = [] }) => {
   return server
 }
 
-if (!module.parent) {
-  console.log("starting server at http://localhost:3000")
-  runServer({ port: 3000 })
-}
-
 export default runServer
