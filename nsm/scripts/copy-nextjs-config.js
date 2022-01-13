@@ -27,6 +27,6 @@ async function copyNextjsConfig() {
 
 module.exports = { copyNextjsConfig }
 
-if (!module.parent) {
+if (require.main === module) {
   copyNextjsConfig()
 }
