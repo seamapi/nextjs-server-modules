@@ -74,6 +74,6 @@ You can bundle nextjs into npm modules, but some static analysis isn't available
 since nextjs uses the directory structure to determine what to load in at
 runtime.
 
-You'll also have problems running a `next` server within a vercel endpoint,
+You'll also have problems running a `next` server within a Vercel endpoint,
 because some vercel optimizations get rid of some webpack/next modules as an
 optimization.
