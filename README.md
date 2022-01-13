@@ -77,3 +77,7 @@ runtime.
 You'll also have problems running a `next` server within a Vercel endpoint,
 because some vercel optimizations get rid of some webpack/next modules as an
 optimization.
+
+### Why is my module bigger?
+
+We base64 code static files.
