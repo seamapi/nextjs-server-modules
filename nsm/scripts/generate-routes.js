@@ -24,7 +24,7 @@ async function generateRoutes() {
   )
 
   for (const fp of staticFiles) {
-    const fileContentB64 = (await fs.readFile(`${nextDir}/${fp}`)).toString(
+    const fileContentB64 = (await fs.readFile(path.resolve(nextDir, fp))).toString(
       "base64"
     )
     const outFilePath = path.resolve(
@@ -34,6 +34,8 @@ async function generateRoutes() {
     )
     const outFileContent = `export default Buffer.from(\`${fileContentB64}\`, "base64")`
     await mkdirp(path.dirname(outFilePath))
+    // Fixes race condition on MAC
+    await new Promise(resolve => setTimeout(resolve, 1))
     await fs.writeFile(outFilePath, outFileContent)
   }
 
