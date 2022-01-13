@@ -5,6 +5,7 @@
   "repository": "git@github.com:hello-seam/nextjs-server-modules.git",
   "author": "seveibar <seveibar@gmail.com>",
   "scripts": {
+    "test": "cd ./tests/assets/nextjs-sample-project && yarn install && node ../../../bin.js build",
     "build:old": "rimraf ./dist && swc ./lib -d ./dist/lib && swc ./nsm -d ./dist/nsm"
   },
   "bin": {
