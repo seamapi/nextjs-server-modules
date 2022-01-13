@@ -68,7 +68,7 @@ in the generated `dist/index.js` file.
 
 ## FAQ
 
-### Why can't next.js bundle into an npm module?
+### Why can't Next.js bundle into an npm module?
 
 You can bundle nextjs into npm modules, but some static analysis isn't available
 since nextjs uses the directory structure to determine what to load in at
