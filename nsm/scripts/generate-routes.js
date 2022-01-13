@@ -71,6 +71,6 @@ async function generateRoutes() {
 
 module.exports = { generateRoutes }
 
-if (!module.parent) {
+if (require.main === module) {
   generateRoutes()
 }
