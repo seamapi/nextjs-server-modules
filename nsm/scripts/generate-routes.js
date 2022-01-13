@@ -35,7 +35,7 @@ async function generateRoutes() {
     const outFileContent = `export default Buffer.from(\`${fileContentB64}\`, "base64")`
     await mkdirp(path.dirname(outFilePath))
     // Fixes race condition on MAC
-    await new Promise(resolve => setTimeout(resolve, 1))
+    await new Promise(resolve => setTimeout(resolve, 10))
     await fs.writeFile(outFilePath, outFileContent)
   }
 
