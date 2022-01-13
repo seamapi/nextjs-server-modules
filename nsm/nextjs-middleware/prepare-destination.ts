@@ -1,7 +1,7 @@
 import type { IncomingMessage } from "http"
 import type { RouteHas } from "../types/nextjs"
-import { compile, pathToRegexp } from "next/dist/compiled/path-to-regexp"
-import escapeStringRegexp from "next/dist/compiled/escape-string-regexp"
+import { compile, pathToRegexp } from "path-to-regexp"
+import escapeStringRegexp from "escape-string-regexp"
 import { parseUrl } from "./parse-url"
 
 export function matchHas(
