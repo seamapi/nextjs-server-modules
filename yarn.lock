@@ -371,10 +371,10 @@
     node-gyp "^7.1.0"
     read-package-json-fast "^2.0.1"
 
-"@seamapi/wrappers@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@seamapi/wrappers/-/wrappers-1.0.1.tgz#f51ffeb568aedf2bf389938f0d12b0c535b682b3"
-  integrity sha512-VGvLIxl8NW6BhMm5MUFNjV8MePbNr+gpZvzYu/wn69TEk/m9HbvY01olCZ1lgv8eT+4zoEg4mq77Pdjl4+K4CQ==
+"@seamapi/wrappers@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@seamapi/wrappers/-/wrappers-1.1.0.tgz#cb4ddc25a4032c3484b25f5b26a685dfe2f9bd0c"
+  integrity sha512-rMrBKO/hfpGnchcQbLVtcGt3NmMOuHan8lMqPsiZKCyTVH5zSO8rok0n1lc6yIbCWoQqy7cOOi/NJmsqgxLuag==
 
 "@semantic-release/commit-analyzer@^9.0.2":
   version "9.0.2"
