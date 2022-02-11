@@ -73,10 +73,8 @@ export const runServer = async ({ port, middlewares = [] }) => {
       query,
       (s) => resolveDynamicRoute(s, Object.keys(routes))
     )
-    req.url = resolveResult.resolvedHref || req.url
-    debug(`resolved request to "${req.url}"`)
-
     req.url = req.url.split("?")[0]
+    debug(`resolved request to "${resolveResult.resolvedHref}"`)
 
     const { serverFunc, match, fsPath } = routeMatcher(resolveResult.asPath) || {}
 

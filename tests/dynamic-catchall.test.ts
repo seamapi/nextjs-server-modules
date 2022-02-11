@@ -20,10 +20,13 @@ test("dynamic catchall path", async (t) => {
 
   const server = await nsmIndex.default({ port })
 
-  const { data: {query} } = await axios.get(`http://localhost:${port}/dir2/some/route/params`)
+  const { data: {query, requestUrl} } = await axios.get(`http://localhost:${port}/dir2/some/route/params?searchParam=a-value`)
+
+  t.is(requestUrl, "/dir2/some/route/params")
 
   t.deepEqual(query, {
     param3: ['some', 'route', 'params'],
+    searchParam: 'a-value'
   })
 
   server.close()
