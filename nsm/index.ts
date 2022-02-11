@@ -5,13 +5,54 @@ import { IncomingMessage } from "http"
 import getRouteMatcher from "./route-matcher"
 import querystring from "querystring"
 import fs from "fs/promises"
-import path from "path"
 import Debug from "debug"
 import wrappers from "@seamapi/wrappers"
 import resolveRewrites from "./nextjs-middleware/resolve-rewrites"
 import nextConfig from "./next.config"
+import { removePathTrailingSlash } from "./nextjs-middleware/normalize-trailing-slash"
+import { getRouteRegex } from "./route-matcher/route-regex"
 
 const debug = Debug("nsm")
+
+const TEST_ROUTE = /\/\[[^/]+?\](?=\/|$)/
+
+export function isDynamicRoute(route: string): boolean {
+  return TEST_ROUTE.test(route)
+}
+
+export function normalizePathSep(path: string): string {
+  return path.replace(/\\/g, '/')
+}
+
+export function denormalizePagePath(page: string) {
+  page = normalizePathSep(page)
+  if (page.startsWith('/index/') && !isDynamicRoute(page)) {
+    page = page.slice(6)
+  } else if (page === '/index') {
+    page = '/'
+  }
+  return page
+}
+
+function resolveDynamicRoute(pathname: string, pages: string[]) {
+  const cleanPathname = removePathTrailingSlash(denormalizePagePath(pathname!))
+
+  if (cleanPathname === '/404' || cleanPathname === '/_error') {
+    return pathname
+  }
+
+  // handle resolving href for dynamic routes
+  if (!pages.includes(cleanPathname!)) {
+    // eslint-disable-next-line array-callback-return
+    pages.some((page) => {
+      if (isDynamicRoute(page) && getRouteRegex(page).re.test(cleanPathname!)) {
+        pathname = page
+        return true
+      }
+    })
+  }
+  return removePathTrailingSlash(pathname)
+}
 
 export const runServer = async ({ port, middlewares = [] }) => {
   debug(`starting server on port ${port}`)
@@ -30,14 +71,15 @@ export const runServer = async ({ port, middlewares = [] }) => {
         ...(nextConfig as any).rewrites,
       },
       query,
-      (s) => s
+      (s) => resolveDynamicRoute(s, Object.keys(routes))
     )
     req.url = resolveResult.resolvedHref || req.url
     debug(`resolved request to "${req.url}"`)
 
     req.url = req.url.split("?")[0]
 
-    const { serverFunc, match, fsPath } = routeMatcher(req.url) || {}
+    const { serverFunc, match, fsPath } = routeMatcher(resolveResult.asPath) || {}
+
     if (typeof serverFunc === "string") {
       res.statusCode = 200
       res.end(await fs.readFile(serverFunc))

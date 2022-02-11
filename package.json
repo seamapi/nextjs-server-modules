@@ -37,7 +37,7 @@
     "cookie": "^0.4.1",
     "debug": "^4.3.3",
     "escape-string-regexp": "^4.0.0",
-    "execa": "^6.0.0",
+    "execa": "^5.1.1",
     "glob": "^7.2.0",
     "glob-promise": "^4.2.2",
     "micro": "^9.3.4",
