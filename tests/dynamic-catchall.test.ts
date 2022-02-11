@@ -22,7 +22,7 @@ test("dynamic catchall path", async (t) => {
 
   const { data: {query, requestUrl} } = await axios.get(`http://localhost:${port}/dir2/some/route/params?searchParam=a-value`)
 
-  t.is(requestUrl, "/dir2/some/route/params")
+  t.is(requestUrl, "/dir2/some/route/params?searchParam=a-value")
 
   t.deepEqual(query, {
     param3: ['some', 'route', 'params'],
