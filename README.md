@@ -80,4 +80,4 @@ optimization.
 
 ### Why is my module bigger?
 
-We base64 code static files.
+NSM base64 encodes static files so that they're bundleable, it's very inefficient.
