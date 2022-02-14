@@ -92,6 +92,8 @@ export const runServer = async ({ port, middlewares = [] }) => {
       ...[...middlewares, serverFunc?.default || serverFunc]
     )
 
+    wrappedServerFunc.config = serverFunc.config || {}
+
     await apiResolver(
       req,
       res,
