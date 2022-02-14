@@ -73,9 +73,9 @@ export const runServer = async ({ port, middlewares = [] }) => {
       query,
       (s) => resolveDynamicRoute(s, Object.keys(routes))
     )
-    debug(`resolved request to "${resolveResult.resolvedHref}"`)
+    debug(`resolved request to "${resolveResult.parsedAs.pathname}"`)
 
-    const { serverFunc, match, fsPath } = routeMatcher(resolveResult.asPath) || {}
+    const { serverFunc, match } = routeMatcher(resolveResult.parsedAs.pathname) || {}
 
     if (typeof serverFunc === "string") {
       res.statusCode = 200
