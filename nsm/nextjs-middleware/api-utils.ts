@@ -86,7 +86,7 @@ export async function apiResolver(
       contentLength += Buffer.byteLength(args[0] || "")
       return writeData.apply(apiRes, args)
     }
-    apiRes.end = (...args: any[2]) => {
+    ;(apiRes as any).end = (...args: any[2]) => {
       if (args.length && typeof args[0] !== "function") {
         contentLength += Buffer.byteLength(args[0] || "")
       }
