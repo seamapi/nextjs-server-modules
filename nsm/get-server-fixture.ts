@@ -7,7 +7,7 @@ server for your test suite to use.
 
 import axios from "axios"
 import getPort from "get-port"
-import { wrappers } from "@seamapi/wrappers"
+import { wrappers } from "nextjs-middleware-wrappers"
 import { runServer } from "./"
 
 interface Options {

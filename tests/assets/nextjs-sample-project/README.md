@@ -3,13 +3,13 @@
 ## Installation
 
 ```bash
-npm install @seamapi/nextjs-health-endpoint-module
+npm install nextjs-health-endpoint-module
 ```
 
 ## Usage
 
 ```ts
-import healthEndpoint from "@seamapi/nextjs-health-endpoint-module"
+import healthEndpoint from "nextjs-health-endpoint-module"
 
 const server = await healthEndpoint({ port: 3030 })
 
