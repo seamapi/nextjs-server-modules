@@ -6,7 +6,7 @@ import getRouteMatcher from "./route-matcher"
 import querystring from "querystring"
 import fs from "fs/promises"
 import Debug from "debug"
-import wrappers from "@seamapi/wrappers"
+import wrappers from "nextjs-middleware-wrappers"
 import resolveRewrites from "./nextjs-middleware/resolve-rewrites"
 import nextConfig from "./next.config"
 import { removePathTrailingSlash } from "./nextjs-middleware/normalize-trailing-slash"
@@ -21,15 +21,15 @@ export function isDynamicRoute(route: string): boolean {
 }
 
 export function normalizePathSep(path: string): string {
-  return path.replace(/\\/g, '/')
+  return path.replace(/\\/g, "/")
 }
 
 export function denormalizePagePath(page: string) {
   page = normalizePathSep(page)
-  if (page.startsWith('/index/') && !isDynamicRoute(page)) {
+  if (page.startsWith("/index/") && !isDynamicRoute(page)) {
     page = page.slice(6)
-  } else if (page === '/index') {
-    page = '/'
+  } else if (page === "/index") {
+    page = "/"
   }
   return page
 }
@@ -37,7 +37,7 @@ export function denormalizePagePath(page: string) {
 function resolveDynamicRoute(pathname: string, pages: string[]) {
   const cleanPathname = removePathTrailingSlash(denormalizePagePath(pathname!))
 
-  if (cleanPathname === '/404' || cleanPathname === '/_error') {
+  if (cleanPathname === "/404" || cleanPathname === "/_error") {
     return pathname
   }
 
@@ -75,7 +75,8 @@ export const runServer = async ({ port, middlewares = [] }) => {
     )
     debug(`resolved request to "${resolveResult.parsedAs.pathname}"`)
 
-    const { serverFunc, match } = routeMatcher(resolveResult.parsedAs.pathname) || {}
+    const { serverFunc, match } =
+      routeMatcher(resolveResult.parsedAs.pathname) || {}
 
     if (typeof serverFunc === "string") {
       res.statusCode = 200

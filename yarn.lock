@@ -371,11 +371,6 @@
     node-gyp "^7.1.0"
     read-package-json-fast "^2.0.1"
 
-"@seamapi/wrappers@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@seamapi/wrappers/-/wrappers-1.1.0.tgz#cb4ddc25a4032c3484b25f5b26a685dfe2f9bd0c"
-  integrity sha512-rMrBKO/hfpGnchcQbLVtcGt3NmMOuHan8lMqPsiZKCyTVH5zSO8rok0n1lc6yIbCWoQqy7cOOi/NJmsqgxLuag==
-
 "@semantic-release/commit-analyzer@^9.0.2":
   version "9.0.2"
   resolved "https://registry.yarnpkg.com/@semantic-release/commit-analyzer/-/commit-analyzer-9.0.2.tgz#a78e54f9834193b55f1073fa6258eecc9a545e03"
@@ -4175,6 +4170,11 @@ next@^12.0.7:
     "@next/swc-win32-arm64-msvc" "12.0.7"
     "@next/swc-win32-ia32-msvc" "12.0.7"
     "@next/swc-win32-x64-msvc" "12.0.7"
+
+nextjs-middleware-wrappers@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/nextjs-middleware-wrappers/-/nextjs-middleware-wrappers-1.1.2.tgz#8c7f32251f8603ea99f465c7109c496cc671befc"
+  integrity sha512-+DP3XFug7pWD5myYomAjoNsnfQtmVqZ2xQ82oWgJQU0HFDWuyNSFHdwumSJqgfPUmCjZiD8JPi0RMCRY18kvHQ==
 
 node-fetch@2.6.1:
   version "2.6.1"
