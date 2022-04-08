@@ -2,6 +2,7 @@ const glob = require("glob-promise")
 const mkdirp = require("mkdirp")
 const path = require("path")
 const prettier = require("prettier")
+const { existsSync } = require("fs")
 const fs = require("fs/promises")
 
 async function generateRoutes() {
@@ -24,9 +25,9 @@ async function generateRoutes() {
   )
 
   for (const fp of staticFiles) {
-    const fileContentB64 = (await fs.readFile(path.resolve(nextDir, fp))).toString(
-      "base64"
-    )
+    const fileContentB64 = (
+      await fs.readFile(path.resolve(nextDir, fp))
+    ).toString("base64")
     const outFilePath = path.resolve(
       __dirname,
       "../generated_static",
@@ -35,8 +36,13 @@ async function generateRoutes() {
     const outFileContent = `export default Buffer.from(\`${fileContentB64}\`, "base64")`
     await mkdirp(path.dirname(outFilePath))
     // Fixes race condition on MAC
-    await new Promise(resolve => setTimeout(resolve, 10))
+    await new Promise((resolve) => setTimeout(resolve, 10))
     await fs.writeFile(outFilePath, outFileContent)
+  }
+
+  let pagesDirRelativePath = ".."
+  if (existsSync(__dirname, "../src/pages")) {
+    pagesDirRelativePath = "../src"
   }
 
   const routesFile = prettier.format(
@@ -45,7 +51,10 @@ async function generateRoutes() {
   ${Object.entries(pagesManifest)
     .map(([route, fp]) =>
       fp.startsWith("pages/api")
-        ? `"${route}": require("../${fp.split(".").slice(0, -1).join(".")}")`
+        ? `"${route}": require("${pagesDirRelativePath}/${fp
+            .split(".")
+            .slice(0, -1)
+            .join(".")}")`
         : `"${route}": serveStatic("${
             fp.split(".").slice(-1)[0]
           }", require("./generated_static/server/${fp}.ts").default)`
