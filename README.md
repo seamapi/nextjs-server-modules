@@ -13,7 +13,7 @@ to run your projects with, so they can be run without nextjs at runtime.
 
 ## Usage
 
-First, install with `npm install nextjs-server-module`
+First, install with `npm install nextjs-server-modules`
 
 You can now add a build script or just run `nsm build`
 
