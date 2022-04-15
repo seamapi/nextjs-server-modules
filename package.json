@@ -1,6 +1,6 @@
 {
   "name": "nextjs-server-modules",
-  "version": "1.5.18-seve.0",
+  "version": "1.5.18",
   "main": "bin.js",
   "repository": "git@github.com:hello-seam/nextjs-server-modules.git",
   "author": "seveibar <seveibar@gmail.com>",
@@ -40,6 +40,7 @@
     "find-up": "5",
     "glob": "^7.2.0",
     "glob-promise": "^4.2.2",
+    "iconv-lite": "^0.6.3",
     "micro": "^9.3.4",
     "micro-body": "^0.1.2",
     "micro-query": "^0.3.0",
