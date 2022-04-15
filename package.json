@@ -5,7 +5,7 @@
   "repository": "git@github.com:hello-seam/nextjs-server-modules.git",
   "author": "seveibar <seveibar@gmail.com>",
   "scripts": {
-    "test": "cd ./tests/assets/nextjs-sample-project && yarn install && node ../../../bin.js build",
+    "test": "ava -s",
     "build:old": "rimraf ./dist && swc ./lib -d ./dist/lib && swc ./nsm -d ./dist/nsm"
   },
   "bin": {
@@ -19,7 +19,8 @@
     "@semantic-release/release-notes-generator": "^10.0.3",
     "@swc/cli": "^0.1.55",
     "@swc/core": "^1.2.124",
-    "@types/node": "^17.0.5",
+    "@types/node": "^17.0.24",
+    "@types/react": "^18.0.5",
     "ava": "^3.15.0",
     "axios": "^0.24.0",
     "esbuild": "^0.14.7",
@@ -37,6 +38,7 @@
     "debug": "^4.3.3",
     "escape-string-regexp": "^4.0.0",
     "execa": "^5.1.1",
+    "find-up": "5",
     "glob": "^7.2.0",
     "glob-promise": "^4.2.2",
     "micro": "^9.3.4",

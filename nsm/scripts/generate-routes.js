@@ -41,7 +41,7 @@ async function generateRoutes() {
   }
 
   let pagesDirRelativePath = ".."
-  if (existsSync(__dirname, "../src/pages")) {
+  if (existsSync(path.join(__dirname, "../../src/pages"))) {
     pagesDirRelativePath = "../src"
   }
 
@@ -49,16 +49,13 @@ async function generateRoutes() {
     `import serveStatic from "./serve-static"
     export default {
   ${Object.entries(pagesManifest)
-    .map(([route, fp]) =>
-      fp.startsWith("pages/api")
-        ? `"${route}": require("${pagesDirRelativePath}/${fp
-            .split(".")
-            .slice(0, -1)
-            .join(".")}")`
-        : `"${route}": serveStatic("${
-            fp.split(".").slice(-1)[0]
-          }", require("./generated_static/server/${fp}.ts").default)`
-    )
+    .map(([route, fp]) => {
+      const fpNoExt = fp.split(".").slice(0, -1).join(".")
+      const fpExt = fpNoExt.split(".").slice(-1)[0]
+      return fp.startsWith("pages/api")
+        ? `"${route}": require("${pagesDirRelativePath}/${fpNoExt}")`
+        : `"${route}": serveStatic("${fpExt}", require("./generated_static/server/${fp}.ts").default)`
+    })
     .join(",")},
     ${staticFiles
       .filter((fp) => fp.startsWith("static/"))
