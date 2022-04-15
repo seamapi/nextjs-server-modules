@@ -41,7 +41,7 @@ async function generateRoutes() {
   }
 
   let pagesDirRelativePath = ".."
-  if (existsSync(path.join(__dirname, "../src/pages"))) {
+  if (existsSync(path.join(__dirname, "../../src/pages"))) {
     pagesDirRelativePath = "../src"
   }
 
