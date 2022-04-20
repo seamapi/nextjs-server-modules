@@ -57,7 +57,7 @@ function resolveDynamicRoute(pathname: string, pages: string[]) {
 
 type Middleware = (next: NextApiHandler) => NextApiHandler
 
-export const runServer = async ({ port, middlewares = [] }: {port: number, middlewares: Middleware[]}) => {
+export const runServer = async ({ port, middlewares = [] }: {port: number, middlewares?: Middleware[]}) => {
   debug(`starting server on port ${port}`)
 
   const routeMatcher = getRouteMatcher(routes)
