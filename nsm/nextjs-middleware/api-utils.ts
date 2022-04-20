@@ -171,7 +171,7 @@ export async function parseBody(
   try {
     buffer = await getRawBody(req, { encoding, limit })
   } catch (e) {
-    if (e?.type === "entity.too.large") {
+    if ((e as any)?.type === "entity.too.large") {
       throw new ApiError(413, `Body exceeded ${limit} limit`)
     } else {
       throw new ApiError(400, "Invalid body")
@@ -438,13 +438,13 @@ function setPreviewData<T>(
     maxAge?: number
   } & __ApiPreviewProps
 ): NextApiResponse<T> {
-  if (isNotValidData(options.previewModeId)) {
+  if (isNotValidData(options.previewModeId!)) {
     throw new Error("invariant: invalid previewModeId")
   }
-  if (isNotValidData(options.previewModeEncryptionKey)) {
+  if (isNotValidData(options.previewModeEncryptionKey!)) {
     throw new Error("invariant: invalid previewModeEncryptionKey")
   }
-  if (isNotValidData(options.previewModeSigningKey)) {
+  if (isNotValidData(options.previewModeSigningKey!)) {
     throw new Error("invariant: invalid previewModeSigningKey")
   }
 
@@ -482,7 +482,7 @@ function setPreviewData<T>(
       : Array.isArray(previous)
       ? previous
       : []),
-    serialize(COOKIE_NAME_PRERENDER_BYPASS, options.previewModeId, {
+    serialize(COOKIE_NAME_PRERENDER_BYPASS, options.previewModeId!, {
       httpOnly: true,
       sameSite: process.env.NODE_ENV !== "development" ? "none" : "lax",
       secure: process.env.NODE_ENV !== "development",

@@ -5,6 +5,7 @@ server for your test suite to use.
 
 */
 
+import { ExecutionContext } from "ava"
 import axios from "axios"
 import getPort from "get-port"
 import { wrappers } from "nextjs-middleware-wrappers"
@@ -14,12 +15,12 @@ interface Options {
   middlewares?: Array<Function>
 }
 
-async function getServerFixture(t, options: Options = {}) {
+async function getServerFixture(t: ExecutionContext, options: Options = {}) {
   const port = await getPort()
 
   if (!options.middlewares) options.middlewares = []
 
-  const server = await runServer({ port, middlewares: options.middlewares })
+  const server = await runServer({ port, middlewares: options.middlewares as any })
 
   t.teardown(() => {
     server.close()

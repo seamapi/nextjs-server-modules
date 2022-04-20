@@ -161,7 +161,7 @@ export function prepareDestination(args: {
         compileNonPath(unescapeSegments(value), args.params)
       )
     } else {
-      destQuery[key] = compileNonPath(unescapeSegments(strOrArray), args.params)
+      destQuery[key] = compileNonPath(unescapeSegments(strOrArray!), args.params)
     }
   }
 

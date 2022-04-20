@@ -8,7 +8,7 @@ import { Rewrite, RouteHas } from "../types/nextjs"
 
 const customRouteMatcher = pathMatch(true)
 
-const delBasePath = (s) => s
+const delBasePath = (s: string) => s
 
 export default function resolveRewrites(
   asPath: string,

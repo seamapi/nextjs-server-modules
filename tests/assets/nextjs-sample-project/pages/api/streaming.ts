@@ -1,3 +1,5 @@
+import { NextApiHandler } from "next"
+
 const streamToString = (stream: NodeJS.ReadableStream) => {
   return new Promise<string>((resolve, reject) => {
     const chunks: string[] = []
@@ -13,7 +15,7 @@ const streamToString = (stream: NodeJS.ReadableStream) => {
   })
 }
 
-export default async (req, res) => {
+const handler: NextApiHandler = async (req, res) => {
   try {
     const data = await streamToString(req)
     res.status(200).json({
@@ -23,10 +25,12 @@ export default async (req, res) => {
   } catch (error) {
     res.status(500).json({
       route: "/api/streaming.ts",
-      error: error.message,
+      error: (error as Error).message,
     })
   }
 }
+
+export default handler
 
 export const config = {
   api: {
