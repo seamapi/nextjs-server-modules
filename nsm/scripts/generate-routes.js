@@ -10,10 +10,10 @@ async function generateRoutes() {
   const pagesDir = path.resolve(nextDir, "server/pages")
   const staticDir = path.resolve(nextDir, "static")
 
-  const staticFiles = (await glob("**/*", { cwd: staticDir }))
+  const staticFiles = (await glob("**/*", { cwd: staticDir, nodir: true }))
     .map((fp) => `static/${fp}`)
     .concat(
-      (await glob("**/*", { cwd: pagesDir }))
+      (await glob("**/*", { cwd: pagesDir, nodir: true }))
         .filter((fp) => !fp.startsWith("api"))
         .filter((fp) => !fp.endsWith(".nft.json"))
         .map((fp) => `server/pages/${fp}`)
