@@ -1,9 +1,9 @@
 import { getRouteRegex } from "./route-regex"
 import { getRouteMatcherFunc } from "./get-route-matcher-func"
 
-export default (routeMapping) => {
+export default (routeMapping: any) => {
   // convert each route to a regex
-  const routes = []
+  const routes: any[] = []
   for (const [fsPath, serverFunc] of Object.entries(routeMapping)) {
     const routeRegex = getRouteRegex(fsPath)
     routes.push({
@@ -20,7 +20,7 @@ export default (routeMapping) => {
 
   // TODO sort routes to fix precedence
 
-  return (incomingPath) => {
+  return (incomingPath: string) => {
     for (const { serverFunc, matcherFunc, fsPath } of routes) {
       const match = matcherFunc(incomingPath)
       if (match) {

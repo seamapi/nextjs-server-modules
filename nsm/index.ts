@@ -11,6 +11,7 @@ import resolveRewrites from "./nextjs-middleware/resolve-rewrites"
 import nextConfig from "./next.config"
 import { removePathTrailingSlash } from "./nextjs-middleware/normalize-trailing-slash"
 import { getRouteRegex } from "./route-matcher/route-regex"
+import { NextApiHandler } from "./types/nextjs"
 
 const debug = Debug("nsm")
 
@@ -54,15 +55,17 @@ function resolveDynamicRoute(pathname: string, pages: string[]) {
   return removePathTrailingSlash(pathname)
 }
 
-export const runServer = async ({ port, middlewares = [] }) => {
+type Middleware = (next: NextApiHandler) => NextApiHandler
+
+export const runServer = async ({ port, middlewares = [] }: {port: number, middlewares?: Middleware[]}) => {
   debug(`starting server on port ${port}`)
 
   const routeMatcher = getRouteMatcher(routes)
   const server = micro(async (req: IncomingMessage, res) => {
-    const query = querystring.parse(req.url.split("?").slice(1).join("?"))
+    const query = querystring.parse(req.url!.split("?").slice(1).join("?"))
     debug(`got request for "${req.url}"`)
     const resolveResult = resolveRewrites(
-      req.url,
+      req.url!,
       Object.keys(routes),
       {
         afterFiles: [],
