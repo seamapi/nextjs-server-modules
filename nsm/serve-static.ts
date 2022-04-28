@@ -2,7 +2,7 @@ import mime from "mime-types"
 import { NextApiHandler } from "./types/nextjs"
 
 const serveStatic = (ext: string, content: any) => ((req, res) => {
-  const contentType = mime.contentType(ext)
+  const contentType = mime.lookup(ext)
   if (contentType) {
     res.setHeader("Content-Type", contentType)
   }
