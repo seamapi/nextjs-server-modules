@@ -13,10 +13,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
       - name: Run NPM Install
         run: npm install
       - name: Typecheck
         run: npx tsc
       - name: Run NPM Test
-        run: npm test
+        run: yarn test -T 1m

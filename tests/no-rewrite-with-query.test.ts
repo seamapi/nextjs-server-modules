@@ -1,21 +1,11 @@
 import test from "ava"
-import { build } from "lib/build"
-import path from "path"
 import axios from "axios"
+import { getSampleProject } from "./fixtures/get-sample-project"
 
 test("no rewrite with query", async (t) => {
-  await build({
-    dir: path.resolve(__dirname, "assets", "nextjs-sample-project"),
-  })
-  const getServerFixture = require(path.resolve(
-    __dirname,
-    "assets",
-    "nextjs-sample-project",
-    ".nsm",
-    "get-server-fixture.ts"
-  ))
+  const {getServerFixture} = await getSampleProject()
 
-  const {serverURL} = await getServerFixture.default(t)
+  const {serverURL} = await getServerFixture(t)
 
   const response = await axios.get(`${serverURL}/somepage?with=query`)
 

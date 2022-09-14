@@ -1,24 +1,13 @@
 import test from "ava"
-import { build } from "lib/build"
-import path from "path"
 import getPort from "get-port"
 import axios from "axios"
+import { getSampleProject } from "./fixtures/get-sample-project"
 
 test("dynamic catchall path", async (t) => {
-  await build({
-    dir: path.resolve(__dirname, "assets", "nextjs-sample-project"),
-  })
-  const nsmIndex = require(path.resolve(
-    __dirname,
-    "assets",
-    "nextjs-sample-project",
-    ".nsm",
-    "index.ts"
-  ))
-
+  const {nsmIndex} = await getSampleProject()
   const port = await getPort()
 
-  const server = await nsmIndex.default({ port })
+  const server = await nsmIndex({ port })
 
   const { data: {query, requestUrl} } = await axios.get(`http://localhost:${port}/dir2/some/route/params?searchParam=a-value`)
 

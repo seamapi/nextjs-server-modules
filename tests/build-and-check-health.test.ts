@@ -1,25 +1,12 @@
 import test from "ava"
-import { build } from "lib/build"
-import path from "path"
-import tempy from "tempy"
 import getPort from "get-port"
 import axios from "axios"
+import { getSampleProject } from "./fixtures/get-sample-project"
 
 test("build and check health", async (t) => {
-  await build({
-    dir: path.resolve(__dirname, "assets", "nextjs-sample-project"),
-  })
-  const nsmIndex = require(path.resolve(
-    __dirname,
-    "assets",
-    "nextjs-sample-project",
-    ".nsm",
-    "index.ts"
-  ))
-
+  const {nsmIndex} = await getSampleProject()
   const port = await getPort()
-
-  const server = await nsmIndex.default({ port })
+  const server = await nsmIndex({ port })
 
   const { data: res } = await axios.get(`http://localhost:${port}/api/health`)
 
