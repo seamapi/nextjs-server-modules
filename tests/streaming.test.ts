@@ -1,20 +1,10 @@
 import test from "ava"
-import { build } from "lib/build"
-import path from "path"
+import { getSampleProject } from "./fixtures/get-sample-project"
 
 test("streaming", async (t) => {
-  await build({
-    dir: path.resolve(__dirname, "assets", "nextjs-sample-project"),
-  })
-  const getServerFixture = require(path.resolve(
-    __dirname,
-    "assets",
-    "nextjs-sample-project",
-    ".nsm",
-    "get-server-fixture.ts"
-  ))
+  const {getServerFixture} = await getSampleProject()
 
-  const {axios} = await getServerFixture.default(t)
+  const {axios} = await getServerFixture(t)
 
   const response = await axios.get("/streaming", {
     data: 'streamed data',
