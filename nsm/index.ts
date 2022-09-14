@@ -1,8 +1,6 @@
 import routes from "./generated_routes"
-import micro from "micro"
 import { Server } from "http"
 import { apiResolver } from "./nextjs-middleware/api-utils"
-import { IncomingMessage } from "http"
 import getRouteMatcher from "./route-matcher"
 import querystring from "querystring"
 import fs from "fs/promises"
@@ -62,7 +60,7 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
   debug(`starting server on port ${port}`)
 
   const routeMatcher = getRouteMatcher(routes)
-  const server = new Server(micro(async (req, res) => {
+  const server = new Server(async (req, res) => {
     const query = querystring.parse(req.url!.split("?").slice(1).join("?"))
     debug(`got request for "${req.url}"`)
     const resolveResult = resolveRewrites(
@@ -107,8 +105,8 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
       {},
       false
     )
-  }))
-  server.listen({ port })
+  })
+  server.listen(port)
   return server
 }
 
