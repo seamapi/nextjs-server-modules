@@ -9,6 +9,11 @@ async function copyNextjsConfig() {
   let nextConfig = {}
   if (existsSync(nextConfigPath)) {
     nextConfig = require(nextConfigPath)
+
+    if (typeof nextConfig === "function") {
+      nextConfig = await nextConfig()
+    }
+
     if (typeof nextConfig.rewrites === "function") {
       nextConfig.rewrites = await nextConfig.rewrites()
     }
