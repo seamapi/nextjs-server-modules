@@ -106,7 +106,15 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
       false
     )
   })
-  server.listen(port)
+
+  await new Promise<void>((resolve, reject) => {
+    server.once('error', (err) => {
+      if (err) reject(err)
+    })
+    server.listen(port, () => {
+      resolve()
+    })
+  })
   return server
 }
 
