@@ -1,3 +1,4 @@
+// @ts-nocheck
 /*
 
 Modeled after nextjs-ava-fixture, this utility function will provide you a
@@ -8,7 +9,6 @@ server for your test suite to use.
 import { ExecutionContext } from "ava"
 import axios from "axios"
 import getPort from "get-port"
-import { wrappers } from "nextjs-middleware-wrappers"
 import { runServer } from "./"
 
 interface Options {
@@ -20,7 +20,10 @@ async function getServerFixture(t: ExecutionContext, options: Options = {}) {
 
   if (!options.middlewares) options.middlewares = []
 
-  const server = await runServer({ port, middlewares: options.middlewares as any })
+  const server = await runServer({
+    port,
+    middlewares: options.middlewares as any,
+  })
 
   t.teardown(() => {
     server.close()

@@ -8,7 +8,9 @@ export const getSampleProject = async () => {
   await execa("yarn", [], { cwd: projectPath })
 
   await build({
-    dir: projectPath
+    dir: projectPath,
+    verbose: false,
+    skipNextBuild: false,
   })
 
   const nsmIndex = require(path.resolve(
@@ -29,6 +31,6 @@ export const getSampleProject = async () => {
 
   return {
     nsmIndex: nsmIndex.default,
-    getServerFixture: getServerFixture.default
+    getServerFixture: getServerFixture.default,
   }
 }
