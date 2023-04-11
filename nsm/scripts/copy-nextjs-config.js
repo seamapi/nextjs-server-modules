@@ -8,7 +8,12 @@ async function copyNextjsConfig() {
 
   let nextConfig = {}
   if (existsSync(nextConfigPath)) {
-    nextConfig = require(nextConfigPath)
+    try {
+      nextConfig = require(nextConfigPath)
+    } catch (error) {
+      nextConfig = await import(nextConfigPath)
+      if (!nextConfig) throw error
+    }
 
     if (typeof nextConfig === "function") {
       nextConfig = await nextConfig()
