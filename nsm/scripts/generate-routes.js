@@ -1,5 +1,5 @@
 const glob = require("glob-promise")
-const mkdirp = require("mkdirp")
+const { mkdirp } = require("mkdirp")
 const path = require("path")
 const prettier = require("prettier")
 const { existsSync } = require("fs")
