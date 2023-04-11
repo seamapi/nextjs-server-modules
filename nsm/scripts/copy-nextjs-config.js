@@ -10,9 +10,14 @@ async function copyNextjsConfig() {
   if (existsSync(nextConfigPath)) {
     try {
       nextConfig = require(nextConfigPath)
-    } catch (error) {
-      nextConfig = await import(nextConfigPath)
-      if (!nextConfig) throw error
+    } catch (errorA) {
+      try {
+        nextConfig = await import(nextConfigPath)
+      } catch (errorB) {
+        console.error(errorA)
+        console.error(errorB)
+        throw new Error(`Failed to load ${nextConfigPath}`)
+      }
     }
 
     if (typeof nextConfig === "function") {
