@@ -1,3 +1,4 @@
+// @ts-nocheck
 // https://github.com/vercel/next.js/blob/eb0bd63af48ea9bec85670ad1bcbc455c5f879ec/packages/next/shared/lib/i18n/normalize-locale-path.ts
 export interface PathLocale {
   detectedLocale?: string

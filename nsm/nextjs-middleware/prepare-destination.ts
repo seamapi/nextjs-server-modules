@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { IncomingMessage } from "http"
 import type { RouteHas } from "../types/nextjs"
 import { compile, pathToRegexp } from "path-to-regexp"

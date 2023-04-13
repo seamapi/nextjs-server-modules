@@ -1,3 +1,4 @@
+// @ts-nocheck
 import routes from "./generated_routes"
 import { Server } from "http"
 import { apiResolver } from "./nextjs-middleware/api-utils"

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // https://github.com/vercel/next.js/blob/e65c56e7e6c16c3c971984ce7acd161bca6b9c2f/packages/next/shared/lib/router/utils/route-regex.ts
 
 interface Group {
