@@ -72,7 +72,7 @@
   },
   "dependencies": {
     "execa": "^5.1.1",
-    "find-up": "5",
+    "find-up": "^5.0.0",
     "recursive-copy": "^2.0.13",
     "rmfr": "^2.0.0",
     "serve-handler": "^6.1.3",
