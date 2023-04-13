@@ -68,7 +68,7 @@ async function generateRoutes() {
 }
 
 `,
-    { semi: false }
+    { semi: false, parser: "babel" }
   )
 
   await fs.writeFile(
