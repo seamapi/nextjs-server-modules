@@ -1,4 +1,4 @@
-const glob = require("glob-promise")
+const { glob } = require("glob")
 const { mkdirp } = require("mkdirp")
 const path = require("path")
 const prettier = require("prettier")
