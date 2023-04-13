@@ -1,5 +1,6 @@
+// @ts-nocheck
 // https://github.com/vercel/next.js/blob/136b75439612bf6f2f0cd3fd0d8226fdaa8c0f95/packages/next/shared/lib/router/utils/querystring.ts
-import { ParsedUrlQuery } from "querystring"
+import { type ParsedUrlQuery } from "querystring"
 
 export function searchParamsToUrlQuery(
   searchParams: URLSearchParams

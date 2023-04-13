@@ -46,7 +46,8 @@ async function generateRoutes() {
   }
 
   const routesFile = prettier.format(
-    `import serveStatic from "./serve-static"
+    `// @ts-nocheck
+    import serveStatic from "./serve-static"
     export default {
   ${Object.entries(pagesManifest)
     .map(([route, fp]) => {

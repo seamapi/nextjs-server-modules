@@ -1,3 +1,4 @@
+// @ts-nocheck
 import mime from "mime-types"
 import { NextApiHandler } from "./types/nextjs"
 

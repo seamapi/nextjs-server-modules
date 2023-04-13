@@ -1,4 +1,5 @@
-import { ParsedUrlQuery } from "querystring"
+// @ts-nocheck
+import { type ParsedUrlQuery } from "querystring"
 import pathMatch from "./path-match"
 import { matchHas, prepareDestination } from "./prepare-destination"
 import { removePathTrailingSlash } from "./normalize-trailing-slash"
