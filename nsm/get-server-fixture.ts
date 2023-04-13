@@ -15,7 +15,7 @@ interface Options {
   middlewares?: Array<Function>
 }
 
-async function getServerFixture(t: ExecutionContext, options: Options = {}) {
+export async function getServerFixture(t: ExecutionContext, options: Options = {}) {
   const port = await getPort()
 
   if (!options.middlewares) options.middlewares = []
