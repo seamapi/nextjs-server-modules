@@ -597,7 +597,7 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
 
-"@types/raw-body@2.3.0":
+"@types/raw-body@^2.3.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@types/raw-body/-/raw-body-2.3.0.tgz#4a36548b88f53a7253509c65f26f96e2f5178fc1"
   integrity sha512-O6RrhgBmUATx9NfxOarftVIG6Vw64T3JNF26iIR5XVl037Hh5M4gqUQtYtBmEkWJdzEZXd0TevSvSneuh9Snmw==
@@ -4849,6 +4849,16 @@ raw-body@2.4.1:
   dependencies:
     bytes "3.1.0"
     http-errors "1.7.3"
+    iconv-lite "0.4.24"
+    unpipe "1.0.0"
+
+raw-body@^2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.5.2.tgz#99febd83b90e08975087e8f1f9419a149366b68a"
+  integrity sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==
+  dependencies:
+    bytes "3.1.2"
+    http-errors "2.0.0"
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
