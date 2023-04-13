@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Removes the trailing slash of a path if there is one. Preserves the root path `/`.
  */

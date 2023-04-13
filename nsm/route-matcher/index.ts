@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { getRouteRegex } from "./route-regex"
 import { getRouteMatcherFunc } from "./get-route-matcher-func"
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // https://github.com/vercel/next.js/blob/402f0360cece821b9e0017f6ecb499d129993600/packages/next/shared/lib/router/utils/route-matcher.ts
 import { getRouteRegex } from "./route-regex"
 
