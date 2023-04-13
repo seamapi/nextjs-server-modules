@@ -5,7 +5,7 @@ import { matchHas, prepareDestination } from "./prepare-destination"
 import { removePathTrailingSlash } from "./normalize-trailing-slash"
 import { normalizeLocalePath } from "./normalize-locale-path"
 import { parseRelativeUrl } from "./parse-relative-url"
-import { Rewrite, RouteHas } from "../types/nextjs"
+import { type Rewrite, type RouteHas } from "../types/nextjs"
 
 const customRouteMatcher = pathMatch(true)
 
