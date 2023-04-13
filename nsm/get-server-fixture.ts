@@ -6,7 +6,7 @@ server for your test suite to use.
 
 */
 
-import { ExecutionContext } from "ava"
+import type { ExecutionContext } from "ava"
 import axios from "axios"
 import getPort from "get-port"
 import { runServer } from "./"

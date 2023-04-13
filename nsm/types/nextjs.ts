@@ -1,6 +1,6 @@
 // @ts-nocheck
 // https://github.com/vercel/next.js/blob/e2c5952ef2fa03d4fb6dc4cb7ff50d26c76e7ea8/packages/next/shared/lib/utils.ts
-import { type ServerResponse, type IncomingMessage } from "http"
+import type { ServerResponse, IncomingMessage } from "http"
 
 /**
  * Next `API` route request

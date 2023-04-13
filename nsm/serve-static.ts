@@ -1,6 +1,6 @@
 // @ts-nocheck
 import mime from "mime-types"
-import { NextApiHandler } from "./types/nextjs"
+import type { NextApiHandler } from "./types/nextjs"
 
 const serveStatic = (ext: string, content: any) => ((req, res) => {
   const contentType = mime.lookup(ext)
