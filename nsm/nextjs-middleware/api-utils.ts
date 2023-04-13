@@ -1,10 +1,10 @@
 // @ts-nocheck
 // Modified version of: https://github.com/vercel/next.js/blob/e8408c70863b6bcd05437ff92a19194788716722/packages/next/server/api-utils.ts
-import { type IncomingMessage, type ServerResponse } from "http"
+import type { IncomingMessage, ServerResponse } from "http"
 import { Stream } from "stream"
 import getRawBody from "raw-body"
 import { parse } from "content-type"
-import { type NextApiRequest, type NextApiResponse } from "../types/nextjs"
+import type { NextApiRequest, NextApiResponse } from "../types/nextjs"
 import { serialize } from "cookie"
 
 export type NextApiRequestCookies = { [key: string]: string }
