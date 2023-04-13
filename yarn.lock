@@ -4037,10 +4037,10 @@ next@^12.0.7:
     "@next/swc-win32-ia32-msvc" "12.0.7"
     "@next/swc-win32-x64-msvc" "12.0.7"
 
-nextjs-middleware-wrappers@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/nextjs-middleware-wrappers/-/nextjs-middleware-wrappers-1.1.2.tgz#8c7f32251f8603ea99f465c7109c496cc671befc"
-  integrity sha512-+DP3XFug7pWD5myYomAjoNsnfQtmVqZ2xQ82oWgJQU0HFDWuyNSFHdwumSJqgfPUmCjZiD8JPi0RMCRY18kvHQ==
+nextjs-middleware-wrappers@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/nextjs-middleware-wrappers/-/nextjs-middleware-wrappers-1.3.0.tgz#750821daf306d3b2b1ad86aee28e3ad29599dfd5"
+  integrity sha512-JQ/70Ro+TCB2rQcCOQYJ0PRVXIBzn5KxVpXXfcfJG9miBxXiqRwFBoqunydiR8UGfzKxW3QJXoVhL8Qw3Kw3xQ==
 
 node-fetch@2.6.1:
   version "2.6.1"
