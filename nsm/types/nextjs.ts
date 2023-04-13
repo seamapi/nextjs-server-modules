@@ -1,5 +1,5 @@
 // https://github.com/vercel/next.js/blob/bb6d4d71fd419b64e2a3ce4d3496f2150f9ff86b/packages/next/shared/lib/utils.ts
-import { ServerResponse, IncomingMessage } from "http"
+import { type ServerResponse, type IncomingMessage } from "http"
 
 type Send<T> = (body: T) => void
 

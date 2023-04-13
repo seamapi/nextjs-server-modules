@@ -10,7 +10,7 @@ import resolveRewrites from "./nextjs-middleware/resolve-rewrites"
 import nextConfig from "./next.config"
 import { removePathTrailingSlash } from "./nextjs-middleware/normalize-trailing-slash"
 import { getRouteRegex } from "./route-matcher/route-regex"
-import { NextApiHandler } from "./types/nextjs"
+import { type NextApiHandler } from "./types/nextjs"
 
 const debug = Debug("nsm")
 
