@@ -12,7 +12,7 @@ async function copyNextjsConfig() {
       nextConfig = require(nextConfigPath)
     } catch (errorA) {
       try {
-        nextConfig = await import(nextConfigPath)
+        nextConfig = (await import(nextConfigPath)).default
       } catch (errorB) {
         console.error(errorA)
         console.error(errorB)
