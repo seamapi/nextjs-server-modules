@@ -648,13 +648,6 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
 
-"@types/raw-body@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@types/raw-body/-/raw-body-2.3.0.tgz#4a36548b88f53a7253509c65f26f96e2f5178fc1"
-  integrity sha512-O6RrhgBmUATx9NfxOarftVIG6Vw64T3JNF26iIR5XVl037Hh5M4gqUQtYtBmEkWJdzEZXd0TevSvSneuh9Snmw==
-  dependencies:
-    raw-body "*"
-
 "@types/react@^18.0.20":
   version "18.0.35"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.35.tgz#192061cb1044fe01f2d3a94272cd35dd50502741"
@@ -3873,7 +3866,7 @@ quick-lru@^5.1.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-5.1.1.tgz#366493e6b3e42a3a6885e2e99d18f80fb7a8c932"
   integrity sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==
 
-raw-body@*, raw-body@^2.5.2:
+raw-body@^2.5.2:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.5.2.tgz#99febd83b90e08975087e8f1f9419a149366b68a"
   integrity sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==
