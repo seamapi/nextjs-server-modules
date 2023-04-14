@@ -1,4 +1,4 @@
-const glob = require("glob-promise")
+const { glob } = require("glob")
 const { mkdirp } = require("mkdirp")
 const path = require("path")
 const prettier = require("prettier")
@@ -69,7 +69,7 @@ async function generateRoutes() {
 }
 
 `,
-    { semi: false }
+    { semi: false, parser: "babel" }
   )
 
   await fs.writeFile(
