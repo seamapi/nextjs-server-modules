@@ -7,7 +7,7 @@ server for your test suite to use.
 */
 
 import type { ExecutionContext } from "ava"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import getPort from "get-port"
 import { runServer } from "./"
 
@@ -35,18 +35,11 @@ async function getServerFixture(t: ExecutionContext, options: Options = {}) {
     baseURL: serverURL,
   })
 
-  // Simplify axios errors
   customAxios.interceptors.response.use(
     (res) => res,
     (err) =>
-      err.request && err.response
-        ? Promise.reject({
-            url: err.request.path,
-            status: err.response.status,
-            statusText: err.response.statusText,
-            response: err.response.data,
-            headers: err.response.headers,
-          })
+      err instanceof AxiosError
+        ? Promise.reject(new SimpleAxiosError(err))
         : Promise.reject(err)
   )
 
@@ -59,6 +52,16 @@ async function getServerFixture(t: ExecutionContext, options: Options = {}) {
         server.close()
       }
     },
+  }
+}
+
+class SimpleAxiosError extends Error {
+  constructor(err: AxiosError) {
+    this.url = err.request.path
+    this.status = err.response.status
+    this.statusText = err.response.statusText
+    this.response = err.response.data
+    this.headers = err.response.headers
   }
 }
 
