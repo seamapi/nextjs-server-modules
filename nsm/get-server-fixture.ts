@@ -55,7 +55,7 @@ async function getServerFixture(t: ExecutionContext, options: Options = {}) {
   }
 }
 
-class SimpleAxiosError extends Error {
+export class SimpleAxiosError extends Error {
   constructor(err: AxiosError) {
     this.url = err.request.path
     this.status = err.response.status
