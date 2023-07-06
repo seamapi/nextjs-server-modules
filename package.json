@@ -71,8 +71,10 @@
   },
   "dependencies": {
     "find-up": "^5.0.0",
+    "load-tsconfig": "^0.2.5",
     "recursive-copy": "^2.0.13",
     "rmfr": "^2.0.0",
+    "tsup": "^7.1.0",
     "yargs": "^17.3.1"
   }
 }
