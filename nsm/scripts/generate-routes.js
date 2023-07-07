@@ -57,6 +57,7 @@ function generateRouteFile({
   pagesManifest,
   skipNextBuild,
   ignoreNotApiFiles,
+  staticFiles,
 }) {
   const staticFilesString = skipNextBuild
     ? ""
@@ -130,6 +131,7 @@ export async function generateNsmRoutes({
     pagesManifest,
     ignoreNotApiFiles,
     skipNextBuild: true,
+    staticFiles: "",
   })
 
   await fs.writeFile(
@@ -185,6 +187,7 @@ async function generateRoutes({
     pagesManifest,
     ignoreNotApiFiles,
     skipNextBuild: false,
+    staticFiles,
   })
 
   await fs.writeFile(
