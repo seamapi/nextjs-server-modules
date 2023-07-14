@@ -5,11 +5,13 @@ const prettier = require("prettier")
 const { existsSync } = require("fs")
 const fs = require("fs/promises")
 
+const VALID_EXTENSIONS = [".tsx", ".jsx", ".ts", ".js"]
+
 async function generateNsmPagesManifest(rootDir, outputDir) {
   const pagesDir = existsSync(path.resolve(rootDir, "pages"))
     ? path.resolve(rootDir, "pages")
     : path.resolve(rootDir, "src/pages")
-  const pageFiles = glob.sync("**/*.{ts,tsx,js,jsx}", { cwd: pagesDir })
+  const pageFiles = glob.sync("**/*.{ts,tsx,js,jsx,cjs,mjs,mjsx,cjsx}", { cwd: pagesDir })
 
   const manifest = {}
 
@@ -17,13 +19,13 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
     const relativePagePath = path.relative(process.cwd(), pageFile)
     const parsedPagePath = path.parse(relativePagePath)
 
-    const isInvalidExtension = ![".tsx", ".jsx", ".ts", ".js"].includes(
+    const isInvalidExtension = !VALID_EXTENSIONS.includes(
       parsedPagePath.ext
     )
 
     if (isInvalidExtension) {
       throw new Error(
-        `Invalid file extension for page: ${pageFile}, must be one of: .tsx, .jsx, .ts, .js. Found: ${pageName.ext}`
+        `Invalid file extension for page: ${pageFile}, must be one of: ${VALID_EXTENSIONS.join(', ')}. Found: ${pageName.ext}`
       )
     }
 
@@ -56,7 +58,7 @@ function generateRouteFile({
   pagesDirRelativePath,
   pagesManifest,
   skipNextBuild,
-  ignoreNotApiFiles,
+  onlyApiFiles,
   staticFiles,
 }) {
   const staticFilesString = skipNextBuild
@@ -81,15 +83,15 @@ function generateRouteFile({
         return true
       }
 
-      if (!ignoreNotApiFiles && !fp.startsWith("pages/api")) {
+      if (!onlyApiFiles && !fp.startsWith("pages/api")) {
         throw new Error(
           `At the moment, only API routes are supported. Found: ${fp}`
         )
       }
 
       if (
-        (ignoreNotApiFiles && !fp.startsWith("pages/api")) ||
-        (!skipNextBuild && ignoreNotApiFiles && !fp.startsWith("pages/api"))
+        (onlyApiFiles && !fp.startsWith("pages/api")) ||
+        (!skipNextBuild && onlyApiFiles && !fp.startsWith("pages/api"))
       ) {
         return false
       }
@@ -114,7 +116,7 @@ function generateRouteFile({
 }
 
 export async function generateNsmRoutes({
-  ignoreNotApiFiles = false,
+  onlyApiFiles = false,
 }) {
   let pagesDirRelativePath = "."
   if (existsSync(path.join(__dirname, "./pages"))) {
@@ -129,7 +131,7 @@ export async function generateNsmRoutes({
   const routesFile = generateRouteFile({
     pagesDirRelativePath,
     pagesManifest,
-    ignoreNotApiFiles,
+    onlyApiFiles,
     skipNextBuild: true,
     staticFiles: "",
   })
@@ -141,7 +143,7 @@ export async function generateNsmRoutes({
 }
 
 async function generateRoutes({
-  ignoreNotApiFiles = false,
+  onlyApiFiles = false,
 }) {
   const nextDir = path.resolve(__dirname, "../../.next")
   const pagesDir = path.resolve(nextDir, "server/pages")
@@ -185,7 +187,7 @@ async function generateRoutes({
   const routesFile = generateRouteFile({
     pagesDirRelativePath,
     pagesManifest,
-    ignoreNotApiFiles,
+    onlyApiFiles,
     skipNextBuild: false,
     staticFiles,
   })

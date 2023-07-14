@@ -11,10 +11,10 @@ export const getSampleProject = async () => {
     dir: projectPath,
     verbose: false,
     skipNextBuild: true,
-    ignoreNotApiFiles: true,
+    onlyApiFiles: true,
   })
 
-  const nsmIndex = require(path.resolve(
+  const getNsmIndex = require(path.resolve(
     __dirname,
     "assets",
     "nextjs-sample-project",
@@ -31,7 +31,7 @@ export const getSampleProject = async () => {
   ))
 
   return {
-    nsmIndex: nsmIndex.default,
+    getNsmIndex: getNsmIndex.default,
     getServerFixture: getServerFixture.default,
   }
 }

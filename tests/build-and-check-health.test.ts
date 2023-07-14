@@ -4,9 +4,9 @@ import axios from "axios"
 import { getSampleProject } from "./fixtures/get-sample-project"
 
 test("build and check health", async (t) => {
-  const {nsmIndex} = await getSampleProject()
+  const {getNsmIndex} = await getSampleProject()
   const port = await getPort()
-  const server = await nsmIndex({ port })
+  const server = await getNsmIndex({ port })
 
   const { data: res } = await axios.get(`http://localhost:${port}/api/health`)
 
