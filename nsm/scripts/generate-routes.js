@@ -57,11 +57,11 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
 function generateRouteFile({
   pagesDirRelativePath,
   pagesManifest,
-  skipNextBuild,
+  nextless,
   onlyApiFiles,
   staticFiles,
 }) {
-  const staticFilesString = skipNextBuild
+  const staticFilesString = nextless
     ? ""
     : `,
   ${staticFiles
@@ -79,7 +79,7 @@ function generateRouteFile({
     export default {
   ${Object.entries(pagesManifest)
     .filter(([route, fp]) => {
-      if (!skipNextBuild) {
+      if (!nextless) {
         return true
       }
 
@@ -91,7 +91,7 @@ function generateRouteFile({
 
       if (
         (onlyApiFiles && !fp.startsWith("pages/api")) ||
-        (!skipNextBuild && onlyApiFiles && !fp.startsWith("pages/api"))
+        (!nextless && onlyApiFiles && !fp.startsWith("pages/api"))
       ) {
         return false
       }
@@ -132,7 +132,7 @@ export async function generateNsmRoutes({
     pagesDirRelativePath,
     pagesManifest,
     onlyApiFiles,
-    skipNextBuild: true,
+    nextless: true,
     staticFiles: "",
   })
 
@@ -188,7 +188,7 @@ async function generateRoutes({
     pagesDirRelativePath,
     pagesManifest,
     onlyApiFiles,
-    skipNextBuild: false,
+    nextless: false,
     staticFiles,
   })
 

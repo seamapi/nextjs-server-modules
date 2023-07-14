@@ -10,7 +10,8 @@ export const getSampleProject = async () => {
   await build({
     dir: projectPath,
     verbose: false,
-    skipNextBuild: false,
+    skipBuild: false,
+    nextless: false,
     onlyApiFiles: false
   })
 
