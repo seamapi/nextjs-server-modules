@@ -11,7 +11,9 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
   const pagesDir = existsSync(path.resolve(rootDir, "pages"))
     ? path.resolve(rootDir, "pages")
     : path.resolve(rootDir, "src/pages")
-  const pageFiles = glob.sync("**/*.{ts,tsx,js,jsx,cjs,mjs,mjsx,cjsx}", { cwd: pagesDir })
+  const pageFiles = glob.sync("**/*.{ts,tsx,js,jsx,cjs,mjs,mjsx,cjsx}", {
+    cwd: pagesDir,
+  })
 
   const manifest = {}
 
@@ -19,13 +21,13 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
     const relativePagePath = path.relative(process.cwd(), pageFile)
     const parsedPagePath = path.parse(relativePagePath)
 
-    const isInvalidExtension = !VALID_EXTENSIONS.includes(
-      parsedPagePath.ext
-    )
+    const isInvalidExtension = !VALID_EXTENSIONS.includes(parsedPagePath.ext)
 
     if (isInvalidExtension) {
       throw new Error(
-        `Invalid file extension for page: ${pageFile}, must be one of: ${VALID_EXTENSIONS.join(', ')}. Found: ${pageName.ext}`
+        `Invalid file extension for page: ${pageFile}, must be one of: ${VALID_EXTENSIONS.join(
+          ", "
+        )}. Found: ${pageName.ext}`
       )
     }
 
@@ -54,6 +56,20 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
   return manifest
 }
 
+function getStaticRoutesFiles({ nextless, staticFiles }) {
+  return nextless
+    ? ""
+    : `,
+   ${staticFiles
+     .filter((fp) => fp.startsWith("static/"))
+     .map(
+       (fp) =>
+         `"/_next/${fp}": serveStatic("${
+           fp.split(".").slice(-1)[0]
+         }", require("./generated_static/${fp}.ts").default)`
+     )}`
+}
+
 function generateRouteFile({
   pagesDirRelativePath,
   pagesManifest,
@@ -61,17 +77,10 @@ function generateRouteFile({
   onlyApiFiles,
   staticFiles,
 }) {
-  const staticFilesString = nextless
-    ? ""
-    : `,
-  ${staticFiles
-    .filter((fp) => fp.startsWith("static/"))
-    .map(
-      (fp) =>
-        `"/_next/${fp}": serveStatic("${
-          fp.split(".").slice(-1)[0]
-        }", require("./generated_static/${fp}.ts").default)`
-    )}`
+  const staticRoutesFiles = getStaticRoutesFiles({
+    staticFiles,
+    nextless,
+  })
 
   return prettier.format(
     `// @ts-nocheck
@@ -107,7 +116,7 @@ function generateRouteFile({
         : `"${route}": serveStatic("${fpExt}", require("./generated_static/server/${fp}.ts").default)`
     })
 
-    .join(",")}${staticFilesString}
+    .join(",")}${staticRoutesFiles}
 }
 
 `,
@@ -115,9 +124,7 @@ function generateRouteFile({
   )
 }
 
-export async function generateNsmRoutes({
-  onlyApiFiles = false,
-}) {
+export async function generateNsmRoutes({ onlyApiFiles = false }) {
   let pagesDirRelativePath = "."
   if (existsSync(path.join(__dirname, "./pages"))) {
     pagesDirRelativePath = "./pages"
@@ -142,9 +149,7 @@ export async function generateNsmRoutes({
   )
 }
 
-async function generateRoutes({
-  onlyApiFiles = false,
-}) {
+async function generateRoutes({ onlyApiFiles = false }) {
   const nextDir = path.resolve(__dirname, "../../.next")
   const pagesDir = path.resolve(nextDir, "server/pages")
   const staticDir = path.resolve(nextDir, "static")
