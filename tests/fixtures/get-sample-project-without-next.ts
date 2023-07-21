@@ -11,8 +11,8 @@ export const getSampleProject = async () => {
     dir: projectPath,
     verbose: false,
     skipBuild: false,
-    nextless: false,
-    onlyApiFiles: false
+    nextless: true,
+    onlyApiFiles: true,
   })
 
   const getNsmIndex = require(path.resolve(

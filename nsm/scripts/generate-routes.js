@@ -5,7 +5,151 @@ const prettier = require("prettier")
 const { existsSync } = require("fs")
 const fs = require("fs/promises")
 
-async function generateRoutes() {
+const VALID_EXTENSIONS = [".tsx", ".jsx", ".ts", ".js"]
+
+async function generateNsmPagesManifest(rootDir, outputDir) {
+  const pagesDir = existsSync(path.resolve(rootDir, "pages"))
+    ? path.resolve(rootDir, "pages")
+    : path.resolve(rootDir, "src/pages")
+  const pageFiles = glob.sync("**/*.{ts,tsx,js,jsx,cjs,mjs,mjsx,cjsx}", {
+    cwd: pagesDir,
+  })
+
+  const manifest = {}
+
+  for (const pageFile of pageFiles) {
+    const relativePagePath = path.relative(process.cwd(), pageFile)
+    const parsedPagePath = path.parse(relativePagePath)
+
+    const isInvalidExtension = !VALID_EXTENSIONS.includes(parsedPagePath.ext)
+
+    if (isInvalidExtension) {
+      throw new Error(
+        `Invalid file extension for page: ${pageFile}, must be one of: ${VALID_EXTENSIONS.join(
+          ", "
+        )}. Found: ${pageName.ext}`
+      )
+    }
+
+    const filenameWithoutExtension = parsedPagePath.base
+      .replace(parsedPagePath.ext, "")
+      .replace("index", "")
+
+    const filePathWithoutExtension = path.join(
+      parsedPagePath.dir,
+      filenameWithoutExtension
+    )
+
+    manifest[`/${filePathWithoutExtension}`] = `pages/${relativePagePath}`
+  }
+
+  const manifestJSON = JSON.stringify(manifest, null, 2)
+
+  const manifestFilePath = path.join(outputDir, "pages-manifest.json")
+
+  // there is no need to write the manifest file
+  // but it's good to have it for debugging purposes
+  await fs.writeFile(manifestFilePath, manifestJSON)
+
+  console.log(`Pages manifest generated at: ${manifestFilePath}`)
+
+  return manifest
+}
+
+function getStaticRoutesFiles({ nextless, staticFiles }) {
+  return nextless
+    ? ""
+    : `,
+   ${staticFiles
+     .filter((fp) => fp.startsWith("static/"))
+     .map(
+       (fp) =>
+         `"/_next/${fp}": serveStatic("${
+           fp.split(".").slice(-1)[0]
+         }", require("./generated_static/${fp}.ts").default)`
+     )}`
+}
+
+function generateRouteFile({
+  pagesDirRelativePath,
+  pagesManifest,
+  nextless,
+  onlyApiFiles,
+  staticFiles,
+}) {
+  const staticRoutesFiles = getStaticRoutesFiles({
+    staticFiles,
+    nextless,
+  })
+
+  return prettier.format(
+    `// @ts-nocheck
+    import serveStatic from "./serve-static"
+    export default {
+  ${Object.entries(pagesManifest)
+    .filter(([route, fp]) => {
+      if (!nextless) {
+        return true
+      }
+
+      if (!onlyApiFiles && !fp.startsWith("pages/api")) {
+        throw new Error(
+          `At the moment, only API routes are supported. Found: ${fp}`
+        )
+      }
+
+      if (
+        (onlyApiFiles && !fp.startsWith("pages/api")) ||
+        (!nextless && onlyApiFiles && !fp.startsWith("pages/api"))
+      ) {
+        return false
+      }
+
+      return true
+    })
+    .map(([route, fp]) => {
+      const fpNoExt = fp.split(".").slice(0, -1).join(".")
+      const fpExt = fpNoExt.split(".").slice(-1)[0]
+
+      return fp.startsWith("pages/api")
+        ? `"${route}": require("${pagesDirRelativePath}/${fpNoExt}")`
+        : `"${route}": serveStatic("${fpExt}", require("./generated_static/server/${fp}.ts").default)`
+    })
+
+    .join(",")}${staticRoutesFiles}
+}
+
+`,
+    { semi: false, parser: "babel" }
+  )
+}
+
+export async function generateNsmRoutes({ onlyApiFiles = false }) {
+  let pagesDirRelativePath = "."
+  if (existsSync(path.join(__dirname, "./pages"))) {
+    pagesDirRelativePath = "./pages"
+  }
+
+  const nsmDir = path.resolve(__dirname, "../../.nsm")
+  const rootDir = path.resolve(__dirname, "../..")
+
+  const pagesManifest = await generateNsmPagesManifest(rootDir, nsmDir)
+
+  const routesFile = generateRouteFile({
+    pagesDirRelativePath,
+    pagesManifest,
+    onlyApiFiles,
+    nextless: true,
+    staticFiles: "",
+  })
+
+  await fs.writeFile(
+    path.resolve(__dirname, "../generated_routes.ts"),
+    routesFile
+  )
+}
+
+async function generateRoutes({ onlyApiFiles = false }) {
   const nextDir = path.resolve(__dirname, "../../.next")
   const pagesDir = path.resolve(nextDir, "server/pages")
   const staticDir = path.resolve(nextDir, "static")
@@ -45,32 +189,13 @@ async function generateRoutes() {
     pagesDirRelativePath = "../src"
   }
 
-  const routesFile = prettier.format(
-    `// @ts-nocheck
-    import serveStatic from "./serve-static"
-    export default {
-  ${Object.entries(pagesManifest)
-    .map(([route, fp]) => {
-      const fpNoExt = fp.split(".").slice(0, -1).join(".")
-      const fpExt = fpNoExt.split(".").slice(-1)[0]
-      return fp.startsWith("pages/api")
-        ? `"${route}": require("${pagesDirRelativePath}/${fpNoExt}")`
-        : `"${route}": serveStatic("${fpExt}", require("./generated_static/server/${fp}.ts").default)`
-    })
-    .join(",")},
-    ${staticFiles
-      .filter((fp) => fp.startsWith("static/"))
-      .map(
-        (fp) =>
-          `"/_next/${fp}": serveStatic("${
-            fp.split(".").slice(-1)[0]
-          }", require("./generated_static/${fp}.ts").default)`
-      )}
-}
-
-`,
-    { semi: false, parser: "babel" }
-  )
+  const routesFile = generateRouteFile({
+    pagesDirRelativePath,
+    pagesManifest,
+    onlyApiFiles,
+    nextless: false,
+    staticFiles,
+  })
 
   await fs.writeFile(
     path.resolve(__dirname, "../generated_routes.ts"),
@@ -78,7 +203,7 @@ async function generateRoutes() {
   )
 }
 
-module.exports = { generateRoutes }
+module.exports = { generateRoutes, generateNsmRoutes }
 
 if (require.main === module) {
   generateRoutes()
