@@ -11,6 +11,7 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
   const pagesDir = existsSync(path.resolve(rootDir, "pages"))
     ? path.resolve(rootDir, "pages")
     : path.resolve(rootDir, "src/pages")
+
   const pageFiles = glob.sync("**/*.{ts,tsx,js,jsx,cjs,mjs,mjsx,cjsx}", {
     cwd: pagesDir,
   })
@@ -50,8 +51,6 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
   // there is no need to write the manifest file
   // but it's good to have it for debugging purposes
   await fs.writeFile(manifestFilePath, manifestJSON)
-
-  console.log(`Pages manifest generated at: ${manifestFilePath}`)
 
   return manifest
 }
@@ -124,10 +123,11 @@ function generateRouteFile({
   )
 }
 
-export async function generateNsmRoutes({ onlyApiFiles = false }) {
-  let pagesDirRelativePath = "."
-  if (existsSync(path.join(__dirname, "./pages"))) {
-    pagesDirRelativePath = "./pages"
+export async function generateNsmRoutes({ onlyApiFiles = false, skipBuild }) {
+  let pagesDirRelativePath = skipBuild ? ".." : "."
+
+  if (existsSync(path.join(__dirname, "../../src"))) {
+    pagesDirRelativePath = skipBuild ? "../src" : "./src"
   }
 
   const nsmDir = path.resolve(__dirname, "../../.nsm")
