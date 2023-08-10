@@ -7,12 +7,13 @@ server for your test suite to use.
 */
 
 import type { ExecutionContext } from "ava"
-import axios, { AxiosError } from "axios"
+import axios, { AxiosError, CreateAxiosDefaults } from "axios"
 import getPort from "get-port"
 import { runServer } from "./"
 
 interface Options {
   middlewares?: Array<Function>
+  axiosConfig?: CreateAxiosDefaults
 }
 
 async function getServerFixture(t: ExecutionContext, options: Options = {}) {
@@ -33,6 +34,7 @@ async function getServerFixture(t: ExecutionContext, options: Options = {}) {
 
   const customAxios = axios.create({
     baseURL: serverURL,
+    ...options.axiosConfig
   })
 
   customAxios.interceptors.response.use(
