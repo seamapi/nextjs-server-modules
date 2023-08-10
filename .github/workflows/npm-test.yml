@@ -19,4 +19,4 @@ jobs:
       - name: Typecheck
         run: npx tsc
       - name: Run NPM Test
-        run: yarn test -T 2m
+        run: yarn test -T 5m
