@@ -1,7 +1,7 @@
 import test from "ava"
 import { getSampleProject } from "./fixtures/get-sample-project"
 
-test("streaming", async (t) => {
+test.serial("streaming", async (t) => {
   const {getServerFixture} = await getSampleProject()
 
   const {axios} = await getServerFixture(t)

@@ -3,7 +3,7 @@ import getPort from "get-port"
 import axios from "axios"
 import { getSampleProject } from "./fixtures/get-sample-project"
 
-test("dynamic catchall path", async (t) => {
+test.serial("dynamic catchall path", async (t) => {
   const {getNsmIndex} = await getSampleProject()
   const port = await getPort()
 

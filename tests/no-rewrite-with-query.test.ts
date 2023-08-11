@@ -2,7 +2,7 @@ import test from "ava"
 import axios from "axios"
 import { getSampleProject } from "./fixtures/get-sample-project"
 
-test("no rewrite with query", async (t) => {
+test.serial("no rewrite with query", async (t) => {
   const {getServerFixture} = await getSampleProject()
 
   const {serverURL} = await getServerFixture(t)

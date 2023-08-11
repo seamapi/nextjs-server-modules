@@ -2,7 +2,7 @@ import test from "ava"
 import getPort from "get-port"
 import { getSampleProject } from "./fixtures/get-sample-project"
 
-test("wait for server to start or throw", async (t) => {
+test.serial("wait for server to start or throw", async (t) => {
   const { getNsmIndex } = await getSampleProject()
 
   const port = await getPort()
