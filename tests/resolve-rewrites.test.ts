@@ -2,7 +2,7 @@ import test from "ava"
 import { parseUrl } from "nsm/nextjs-middleware/parse-url"
 import resolveRewrites from "nsm/nextjs-middleware/resolve-rewrites"
 
-test("resolve rewrites /health -> /api/health", async (t) => {
+test.serial("resolve rewrites /health -> /api/health", async (t) => {
   const result = resolveRewrites(
     "/health",
     ["/api/health"],
