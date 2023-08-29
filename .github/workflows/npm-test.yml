@@ -6,17 +6,17 @@ jobs:
   npm_test:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     name: Run NPM Test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
       - name: Run NPM Install
         run: npm install
       - name: Typecheck
         run: npx tsc
       - name: Run NPM Test
-        run: yarn test -T 1m
+        run: yarn test
