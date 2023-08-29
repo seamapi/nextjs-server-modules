@@ -29,7 +29,7 @@ async function copyNextjsConfig() {
     }
   }
 
-  const nextConfigFile = prettier.format(
+  const nextConfigFile = await prettier.format(
     `export default ${JSON.stringify(nextConfig)}`,
     { semi: false, parser: "babel" }
   )

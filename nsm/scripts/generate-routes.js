@@ -69,7 +69,7 @@ function getStaticRoutesFiles({ nextless, staticFiles }) {
      )}`
 }
 
-function generateRouteFile({
+async function generateRouteFile({
   pagesDirRelativePath,
   pagesManifest,
   nextless,
@@ -81,7 +81,7 @@ function generateRouteFile({
     nextless,
   })
 
-  return prettier.format(
+  return await prettier.format(
     `// @ts-nocheck
     import serveStatic from "./serve-static"
     export default {
@@ -135,7 +135,7 @@ export async function generateNsmRoutes({ onlyApiFiles = false, skipBuild }) {
 
   const pagesManifest = await generateNsmPagesManifest(rootDir, nsmDir)
 
-  const routesFile = generateRouteFile({
+  const routesFile = await generateRouteFile({
     pagesDirRelativePath,
     pagesManifest,
     onlyApiFiles,
@@ -189,7 +189,7 @@ async function generateRoutes({ onlyApiFiles = false }) {
     pagesDirRelativePath = "../src"
   }
 
-  const routesFile = generateRouteFile({
+  const routesFile = await generateRouteFile({
     pagesDirRelativePath,
     pagesManifest,
     onlyApiFiles,
