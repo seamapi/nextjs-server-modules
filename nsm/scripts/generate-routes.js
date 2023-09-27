@@ -36,12 +36,10 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
       .replace(parsedPagePath.ext, "")
       .replace("index", "")
 
-    const filePathWithoutExtension = path.join(
+    const filePathWithoutExtension = path.posix.join(
       parsedPagePath.dir,
       filenameWithoutExtension,
     )
-
-    console.log({filePathWithoutExtension, relativePagePath})
 
     manifest[`/${filePathWithoutExtension}`] = `pages/${relativePagePath}`
   }
