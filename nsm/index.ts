@@ -12,6 +12,8 @@ import nextConfig from "./next.config"
 import { removePathTrailingSlash } from "./nextjs-middleware/normalize-trailing-slash"
 import { getRouteRegex } from "./route-matcher/route-regex"
 import type { NextApiHandler } from "./types/nextjs"
+import {getRuntimeContext} from "next/dist/server/web/sandbox"
+
 
 const debug = Debug("nsm")
 
@@ -78,10 +80,11 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
     )
     debug(`resolved request to "${resolveResult.parsedAs.pathname}"`)
 
-    const { serverFunc, match } =
+    // todo: rename serverFunc
+    const { serverFunc, match, fsPath } =
       routeMatcher(resolveResult.parsedAs.pathname) || {}
 
-    if (typeof serverFunc === "string") {
+    if (typeof serverFunc === "string" && serverFunc.endsWith(".html")) {
       res.statusCode = 200
       res.end(await fs.readFile(serverFunc))
       return
@@ -92,11 +95,71 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
       return
     }
 
+    const apiHandler = require(serverFunc)
+
+    if (apiHandler.config?.runtime === "edge") {
+      // todo: why are delays needed?
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      const runtime = await getRuntimeContext({
+        name: "pages/api/edge",
+        onWarning: console.warn,
+        useCache: false,
+        edgeFunctionEntry: {
+          name: "pages/api/edge",
+          paths: [
+            '/Users/maxisom/Git/nextjs-server-modules/tests/assets/nextjs-sample-project/.next/server/edge-runtime-webpack.js',
+            '/Users/maxisom/Git/nextjs-server-modules/tests/assets/nextjs-sample-project/.next/server/pages/api/edge.js'
+          ]
+        },
+        request: {
+          headers: req.headers,
+          method: req.method,
+          url: req.url,
+        },
+        distDir: '.',
+        paths: [
+          '/Users/maxisom/Git/nextjs-server-modules/tests/assets/nextjs-sample-project/.next/server/edge-runtime-webpack.js',
+          '/Users/maxisom/Git/nextjs-server-modules/tests/assets/nextjs-sample-project/.next/server/pages/api/edge.js'
+        ]
+      })
+
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      // todo: .exports?
+      const edgeFunction: (args) => Promise<any> = runtime.context._ENTRIES['middleware_pages/api/edge'].default
+
+      const fullUrl = `http://localhost:${port}${req.url}`
+      const result = await edgeFunction({
+        request: {
+          headers: req.headers,
+          method: req.method,
+          url: fullUrl,
+        }
+      })
+
+      await result.waitUntil
+
+      const response = result.response as Response
+
+      res.statusCode = response.status
+
+      for (const header of response.headers) {
+        res.setHeader(header[0], header[1])
+      }
+
+      res.end(Buffer.from(await response.arrayBuffer()))
+
+      return
+    }
+
+    throw new Error("unhandled")
+
     const wrappedServerFunc = (wrappers as any)(
-      ...[...middlewares, serverFunc?.default || serverFunc]
+      ...[...middlewares, apiHandler?.default || apiHandler]
     )
 
-    wrappedServerFunc.config = serverFunc.config || {}
+    wrappedServerFunc.config = apiHandler.config || {}
 
     await apiResolver(
       req,
