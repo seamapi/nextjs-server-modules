@@ -12,10 +12,19 @@ test("run edge function", async (t) => {
     server.close()
   })
 
-  const { data } = await axios.get(`http://localhost:${port}/api/edge`)
+  const { data, status, headers } = await axios.get(`http://localhost:${port}/api/edge`)
   t.deepEqual(data, {
     isFetchAvailable: true,
     areNodeBuiltinsAvailable: false,
     requestUrl: `http://localhost:${port}/api/edge`
   })
+
+  // Status was forwarded
+  t.is(status, 201)
+
+  // Headers were forwarded
+  t.is(headers["x-custom-header"], "foo")
+
+  // todo: check that environment variables are injected
+  // todo: test streaming responses
 })

@@ -12,7 +12,9 @@ import nextConfig from "./next.config"
 import { removePathTrailingSlash } from "./nextjs-middleware/normalize-trailing-slash"
 import { getRouteRegex } from "./route-matcher/route-regex"
 import type { NextApiHandler } from "./types/nextjs"
-import {getRuntimeContext} from "next/dist/server/web/sandbox"
+import * as esbuild from "esbuild"
+import axios from "axios"
+import * as edge from "edge-runtime"
 
 
 const debug = Debug("nsm")
@@ -98,57 +100,58 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
     const apiHandler = require(serverFunc)
 
     if (apiHandler.config?.runtime === "edge") {
-      // todo: why are delays needed?
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // todo: set dynamically
+      const page = "/api/edge"
 
-      const runtime = await getRuntimeContext({
-        name: "pages/api/edge",
-        onWarning: console.warn,
-        useCache: false,
-        edgeFunctionEntry: {
-          name: "pages/api/edge",
-          paths: [
-            '/Users/maxisom/Git/nextjs-server-modules/tests/assets/nextjs-sample-project/.next/server/edge-runtime-webpack.js',
-            '/Users/maxisom/Git/nextjs-server-modules/tests/assets/nextjs-sample-project/.next/server/pages/api/edge.js'
-          ]
+      const result = await esbuild.build({
+        stdin: {
+          contents: `
+            import {NextRequest} from "next/dist/server/web/spec-extension/request"
+            import {NextFetchEvent} from "next/dist/server/web/spec-extension/fetch-event"
+
+            import handler from "${serverFunc}"
+
+            if (typeof handler !== 'function') {
+              throw new Error('The Edge Function "pages${page}" must export a \`default\` function');
+            }
+
+            addEventListener("fetch", async event => {
+              const request = new NextRequest(event.request)
+              const nextEvent = new NextFetchEvent({request, page: "${page}"})
+              return event.respondWith(await handler(request, nextEvent))
+            })
+          `,
+          resolveDir: __dirname,
+          loader: "ts",
         },
-        request: {
-          headers: req.headers,
-          method: req.method,
-          url: req.url,
+        bundle: true,
+        format: "iife",
+        banner: {
+          js: "const process = {env: {}};",
         },
-        distDir: '.',
-        paths: [
-          '/Users/maxisom/Git/nextjs-server-modules/tests/assets/nextjs-sample-project/.next/server/edge-runtime-webpack.js',
-          '/Users/maxisom/Git/nextjs-server-modules/tests/assets/nextjs-sample-project/.next/server/pages/api/edge.js'
-        ]
+        write: false
       })
 
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const runtime = new edge.EdgeRuntime({initialCode: result.outputFiles[0].text})
+      const edgeServer = await edge.runServer({runtime})
+      const port = new URL(edgeServer.url).port
 
-      // todo: .exports?
-      const edgeFunction: (args) => Promise<any> = runtime.context._ENTRIES['middleware_pages/api/edge'].default
-
-      const fullUrl = `http://localhost:${port}${req.url}`
-      const result = await edgeFunction({
-        request: {
-          headers: req.headers,
-          method: req.method,
-          url: fullUrl,
-        }
+      const response = await axios.request({
+        baseURL: `http://localhost:${port}`,
+        url: req.url,
+        method: req.method,
+        headers: req.headers,
+        data: req,
+        validateStatus: () => true,
+        responseType: "arraybuffer",
       })
-
-      await result.waitUntil
-
-      const response = result.response as Response
-
-      res.statusCode = response.status
 
       for (const header of response.headers) {
         res.setHeader(header[0], header[1])
       }
 
-      res.end(Buffer.from(await response.arrayBuffer()))
+      res.statusCode = response.status
+      res.end(Buffer.from(response.data))
 
       return
     }

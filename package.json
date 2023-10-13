@@ -52,7 +52,7 @@
     "content-type": "^1.0.5",
     "cookie": "^0.5.0",
     "debug": "^4.3.4",
-    "esbuild": "^0.17.16",
+    "esbuild": "0.19.4",
     "esbuild-runner": "^2.2.1",
     "escape-string-regexp": "^4.0.0",
     "execa": "^5.0.0",
@@ -60,7 +60,7 @@
     "glob": "^10.0.0",
     "mime-types": "^2.1.35",
     "mkdirp": "^3.0.0",
-    "next": "^12.0.7",
+    "next": "^13.5.4",
     "nextjs-middleware-wrappers": "^1.3.0",
     "path-to-regexp": "^6.2.0",
     "prettier": "^3.0.3",
@@ -70,6 +70,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
+    "edge-runtime": "2.5.4",
     "find-up": "^5.0.0",
     "load-tsconfig": "^0.2.5",
     "recursive-copy": "^2.0.13",

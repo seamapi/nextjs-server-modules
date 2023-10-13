@@ -2,7 +2,7 @@ export const config = {
   runtime: "edge"
 }
 
-export default async function handler(request) {
+export default async function handler(request, event) {
   let areNodeBuiltinsAvailable = true
   try {
     // Need to assign this to a variable instead of `import("node:fs")` so an error isn't thrown during the normal build
@@ -16,6 +16,11 @@ export default async function handler(request) {
     isFetchAvailable: typeof fetch === "function",
     areNodeBuiltinsAvailable,
     requestUrl: request.url,
+  }, {
+    headers: {
+      "x-custom-header": "foo"
+    },
+    status: 201
   });
 }
 
