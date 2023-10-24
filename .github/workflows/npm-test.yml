@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 18
       - name: Run NPM Install
-        run: npm install
+        run: yarn install
       - name: Typecheck
         run: npx tsc
       - name: Run NPM Test

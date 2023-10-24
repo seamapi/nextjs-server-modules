@@ -66,6 +66,15 @@ We then construct a main export file that knows how to parse `next.config.js`
 and route to the correct files, which we've statically analyzed and are included
 in the generated `dist/index.js` file.
 
+## Caveats
+
+Vercel's Edge Runtime is supported only when running in a Node.js environment. In other words, a bundled nsm project cannot be run in the Edge Runtime.
+
+nsm's implementation of the Edge Runtime does not support:
+
+- [`@vercel/og`](https://www.npmjs.com/package/@vercel/og)
+- `import {userAgent} from "next/server"`
+
 ## FAQ
 
 ### Why can't Next.js bundle into an npm module?

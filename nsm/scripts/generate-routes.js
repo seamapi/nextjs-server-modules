@@ -110,9 +110,18 @@ async function generateRouteFile({
       const fpNoExt = fp.split(".").slice(0, -1).join(".")
       const fpExt = fpNoExt.split(".").slice(-1)[0]
 
-      return fp.startsWith("pages/api")
-        ? `"${route}": require("${pagesDirRelativePath}/${fpNoExt}")`
-        : `"${route}": serveStatic("${fpExt}", require("./generated_static/server/${fp}.ts").default)`
+      if (fp.startsWith("pages/api")) {
+        const absolutePath = path.join(
+          __dirname,
+          "../",
+          pagesDirRelativePath,
+          fpNoExt,
+        )
+
+        return `"${route}": "${absolutePath}"`
+      } else {
+        return `"${route}": serveStatic("${fpExt}", require("./generated_static/server/${fp}.ts").default)`
+      }
     })
 
     .join(",")}${staticRoutesFiles}

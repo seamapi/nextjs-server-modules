@@ -12,6 +12,10 @@ import nextConfig from "./next.config"
 import { removePathTrailingSlash } from "./nextjs-middleware/normalize-trailing-slash"
 import { getRouteRegex } from "./route-matcher/route-regex"
 import type { NextApiHandler } from "./types/nextjs"
+import * as esbuild from "esbuild"
+import axios from "axios"
+import * as edge from "edge-runtime"
+import { environmentPlugin as esbuildEnvironmentPlugin } from "esbuild-plugin-environment"
 
 const debug = Debug("nsm")
 
@@ -84,25 +88,99 @@ export const runServer = async ({
     )
     debug(`resolved request to "${resolveResult.parsedAs.pathname}"`)
 
-    const { serverFunc, match } =
+    const { pathOrFunction, match, fsPath } =
       routeMatcher(resolveResult.parsedAs.pathname) || {}
 
-    if (typeof serverFunc === "string") {
+    if (
+      typeof pathOrFunction === "string" &&
+      pathOrFunction.endsWith(".html")
+    ) {
       res.statusCode = 200
-      res.end(await fs.readFile(serverFunc))
+      res.end(await fs.readFile(pathOrFunction))
       return
     }
-    if (!serverFunc) {
+    if (!pathOrFunction) {
       res.statusCode = 404
       res.end("404") // TODO use routes 404
       return
     }
 
+    const apiHandler =
+      typeof pathOrFunction === "string"
+        ? require(pathOrFunction)
+        : pathOrFunction
+
+    if (apiHandler.config?.runtime === "edge") {
+      const page = resolveResult.asPath
+
+      // todo: cache result?
+      const result = await esbuild.build({
+        stdin: {
+          contents: `
+            import {NextRequest} from "next/dist/server/web/spec-extension/request"
+            import {NextFetchEvent} from "next/dist/server/web/spec-extension/fetch-event"
+
+            import handler from "${pathOrFunction}"
+
+            if (typeof handler !== 'function') {
+              throw new Error('The Edge Function "pages${page}" must export a \`default\` function');
+            }
+
+            addEventListener("fetch", async event => {
+              const request = new NextRequest(event.request)
+              const nextEvent = new NextFetchEvent({request, page: "${page}"})
+              return event.respondWith(await handler(request, nextEvent))
+            })
+          `,
+          resolveDir: __dirname,
+          loader: "ts",
+        },
+        bundle: true,
+        format: "esm",
+        banner: {
+          js: "const process = {env: {}};const require = () => ({})",
+        },
+        write: false,
+        external: [
+          "next/dist/compiled/@vercel/og/*",
+          "next/dist/server/web/spec-extension/user-agent*",
+        ],
+        plugins: [esbuildEnvironmentPlugin(Object.keys(process.env))],
+      })
+
+      const runtime = new edge.EdgeRuntime({
+        initialCode: result.outputFiles[0].text,
+      })
+      const edgeServer = await edge.runServer({ runtime })
+      const port = new URL(edgeServer.url).port
+
+      const response = await axios.request({
+        baseURL: `http://localhost:${port}`,
+        url: req.url,
+        method: req.method,
+        headers: req.headers,
+        data: req,
+        validateStatus: () => true,
+        responseType: "arraybuffer",
+      })
+
+      for (const header of response.headers) {
+        res.setHeader(header[0], header[1])
+      }
+
+      res.statusCode = response.status
+      res.end(Buffer.from(response.data))
+
+      await edgeServer.close()
+
+      return
+    }
+
     const wrappedServerFunc = (wrappers as any)(
-      ...[...middlewares, serverFunc?.default || serverFunc],
+      ...[...middlewares, apiHandler?.default || apiHandler],
     )
 
-    wrappedServerFunc.config = serverFunc.config || {}
+    wrappedServerFunc.config = apiHandler.config || {}
 
     await apiResolver(
       req,

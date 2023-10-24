@@ -5,13 +5,13 @@ import { getRouteMatcherFunc } from "./get-route-matcher-func"
 export default (routeMapping: any) => {
   // convert each route to a regex
   const routes: any[] = []
-  for (const [fsPath, serverFunc] of Object.entries(routeMapping)) {
+  for (const [fsPath, pathOrFunction] of Object.entries(routeMapping)) {
     const routeRegex = getRouteRegex(fsPath)
     routes.push({
       fsPath,
       routeRegex,
       matcherFunc: getRouteMatcherFunc(routeRegex),
-      serverFunc,
+      pathOrFunction,
       // TODO use whatever priority func nextjs uses
       priority: -Object.keys(routeRegex.groups).length,
     })
@@ -22,10 +22,10 @@ export default (routeMapping: any) => {
   // TODO sort routes to fix precedence
 
   return (incomingPath: string) => {
-    for (const { serverFunc, matcherFunc, fsPath } of routes) {
+    for (const { pathOrFunction, matcherFunc, fsPath } of routes) {
       const match = matcherFunc(incomingPath)
       if (match) {
-        return { serverFunc, match, fsPath }
+        return { pathOrFunction, match, fsPath }
       }
     }
     return null
