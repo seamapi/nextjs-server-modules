@@ -12,24 +12,28 @@ export const getSampleProject = async () => {
     verbose: false,
     skipBuild: false,
     nextless: false,
-    onlyApiFiles: false
+    onlyApiFiles: false,
   })
 
-  const getNsmIndex = require(path.resolve(
-    __dirname,
-    "assets",
-    "nextjs-sample-project",
-    ".nsm",
-    "index.ts"
-  ))
+  const getNsmIndex = require(
+    path.resolve(
+      __dirname,
+      "assets",
+      "nextjs-sample-project",
+      ".nsm",
+      "index.ts",
+    ),
+  )
 
-  const getServerFixture = require(path.resolve(
-    __dirname,
-    "assets",
-    "nextjs-sample-project",
-    ".nsm",
-    "get-server-fixture.ts"
-  ))
+  const getServerFixture = require(
+    path.resolve(
+      __dirname,
+      "assets",
+      "nextjs-sample-project",
+      ".nsm",
+      "get-server-fixture.ts",
+    ),
+  )
 
   return {
     getNsmIndex: getNsmIndex.default,

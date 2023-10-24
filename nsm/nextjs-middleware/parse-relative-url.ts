@@ -12,7 +12,7 @@ export function parseRelativeUrl(url: string, base?: string) {
   const resolvedBase = base ? new URL(base, globalBase) : globalBase
   const { pathname, searchParams, search, hash, href, origin } = new URL(
     url,
-    resolvedBase
+    resolvedBase,
   )
   if (origin !== globalBase.origin) {
     throw new Error(`invariant: invalid relative URL, router received ${url}`)

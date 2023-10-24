@@ -7,6 +7,6 @@ test("wait for server to start or throw", async (t) => {
 
   const port = await getPort()
   const server = await getNsmIndex({ port })
-  await t.throwsAsync(() => getNsmIndex({ port }), { code: 'EADDRINUSE' })
+  await t.throwsAsync(() => getNsmIndex({ port }), { code: "EADDRINUSE" })
   server.close()
 })

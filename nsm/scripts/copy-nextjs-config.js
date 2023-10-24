@@ -31,12 +31,12 @@ async function copyNextjsConfig() {
 
   const nextConfigFile = await prettier.format(
     `export default ${JSON.stringify(nextConfig)}`,
-    { semi: false, parser: "babel" }
+    { semi: false, parser: "babel" },
   )
 
   await fs.writeFile(
     path.resolve(__dirname, "../next.config.ts"),
-    nextConfigFile
+    nextConfigFile,
   )
 }
 
