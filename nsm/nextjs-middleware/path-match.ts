@@ -21,7 +21,7 @@ export default (customRoute = false) => {
     let matcherRegex = pathToRegexp.pathToRegexp(
       path,
       keys,
-      customRoute ? customRouteMatcherOptions : matcherOptions
+      customRoute ? customRouteMatcherOptions : matcherOptions,
     )
 
     if (regexModifier) {

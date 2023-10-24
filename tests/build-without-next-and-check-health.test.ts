@@ -4,7 +4,7 @@ import axios from "axios"
 import { getSampleProject } from "./fixtures/get-sample-project-without-next"
 
 test("build and check health", async (t) => {
-  const {getNsmIndex} = await getSampleProject()
+  const { getNsmIndex } = await getSampleProject()
   const port = await getPort()
   const server = await getNsmIndex({ port })
 

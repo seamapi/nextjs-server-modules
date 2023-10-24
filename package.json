@@ -6,7 +6,9 @@
   "author": "seveibar <seveibar@gmail.com>",
   "scripts": {
     "test": "ava -s",
-    "build:old": "rimraf ./dist && swc ./lib -d ./dist/lib && swc ./nsm -d ./dist/nsm"
+    "build:old": "rimraf ./dist && swc ./lib -d ./dist/lib && swc ./nsm -d ./dist/nsm",
+    "format": "prettier --write --ignore-path .gitignore .",
+    "format:check": "prettier --check --ignore-path .gitignore ."
   },
   "bin": {
     "nsm": "./bin.js"

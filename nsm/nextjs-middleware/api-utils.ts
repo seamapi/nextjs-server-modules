@@ -45,7 +45,7 @@ export async function apiResolver(
   apiContext: __ApiPreviewProps,
   propagateError: boolean,
   dev?: boolean,
-  page?: string
+  page?: string,
 ): Promise<void> {
   const apiReq = req as NextApiRequest
   const apiRes = res as NextApiResponse
@@ -76,7 +76,7 @@ export async function apiResolver(
         apiReq,
         config.api && config.api.bodyParser && config.api.bodyParser.sizeLimit
           ? config.api.bodyParser.sizeLimit
-          : "1mb"
+          : "1mb",
       )
     }
 
@@ -94,7 +94,7 @@ export async function apiResolver(
 
       if (contentLength >= 4 * 1024 * 1024) {
         console.warn(
-          `API response for ${req.url} exceeds 4MB. This will cause the request to fail in a future version. https://nextjs.org/docs/messages/api-routes-body-size-limit`
+          `API response for ${req.url} exceeds 4MB. This will cause the request to fail in a future version. https://nextjs.org/docs/messages/api-routes-body-size-limit`,
         )
       }
 
@@ -127,7 +127,7 @@ export async function apiResolver(
       !wasPiped
     ) {
       console.warn(
-        `API resolved without sending a response for ${req.url}, this may result in stalled requests.`
+        `API resolved without sending a response for ${req.url}, this may result in stalled requests.`,
       )
     }
   } catch (err) {
@@ -156,7 +156,7 @@ export async function apiResolver(
  */
 export async function parseBody(
   req: IncomingMessage,
-  limit: string | number
+  limit: string | number,
 ): Promise<any> {
   let contentType
   try {
@@ -234,7 +234,7 @@ export function getCookieParser(headers: {
  */
 export function sendStatusCode(
   res: NextApiResponse,
-  statusCode: number
+  statusCode: number,
 ): NextApiResponse<any> {
   res.statusCode = statusCode
   return res
@@ -249,7 +249,7 @@ export function sendStatusCode(
 export function redirect(
   res: NextApiResponse,
   statusOrUrl: string | number,
-  url?: string
+  url?: string,
 ): NextApiResponse<any> {
   if (typeof statusOrUrl === "string") {
     url = statusOrUrl
@@ -257,7 +257,7 @@ export function redirect(
   }
   if (typeof statusOrUrl !== "number" || typeof url !== "string") {
     throw new Error(
-      `Invalid redirect arguments. Please use a single argument URL, e.g. res.redirect('/destination') or use a status code and URL, e.g. res.redirect(307, '/destination').`
+      `Invalid redirect arguments. Please use a single argument URL, e.g. res.redirect('/destination') or use a status code and URL, e.g. res.redirect(307, '/destination').`,
     )
   }
   res.writeHead(statusOrUrl, { Location: url })
@@ -275,7 +275,7 @@ export function redirect(
 export function sendData(
   req: NextApiRequest,
   res: NextApiResponse,
-  body: any
+  body: any,
 ): void {
   if (body === null || body === undefined) {
     res.end()
@@ -291,7 +291,7 @@ export function sendData(
     if (process.env.NODE_ENV === "development" && body) {
       console.warn(
         `A body was attempted to be set with a 204 statusCode for ${req.url}, this is invalid and the body was ignored.\n` +
-          `See more info here https://nextjs.org/docs/messages/invalid-api-status-body`
+          `See more info here https://nextjs.org/docs/messages/invalid-api-status-body`,
       )
     }
     res.end()
@@ -354,7 +354,7 @@ const SYMBOL_CLEARED_COOKIES = Symbol(COOKIE_NAME_PRERENDER_BYPASS)
 export function tryGetPreviewData(
   req: IncomingMessage,
   res: ServerResponse,
-  options: __ApiPreviewProps
+  options: __ApiPreviewProps,
 ): any {
   // Read cached preview data if present
   if (SYMBOL_PREVIEW_DATA in req) {
@@ -437,7 +437,7 @@ function setPreviewData<T>(
   data: object | string, // TODO: strict runtime type checking
   options: {
     maxAge?: number
-  } & __ApiPreviewProps
+  } & __ApiPreviewProps,
 ): NextApiResponse<T> {
   if (isNotValidData(options.previewModeId!)) {
     throw new Error("invariant: invalid previewModeId")
@@ -567,7 +567,7 @@ export class ApiError extends Error {
 export function sendError(
   res: NextApiResponse,
   statusCode: number,
-  message: string
+  message: string,
 ): void {
   res.statusCode = statusCode
   res.statusMessage = message
@@ -587,7 +587,7 @@ interface LazyProps {
 export function setLazyProp<T>(
   { req }: LazyProps,
   prop: string,
-  getter: () => T
+  getter: () => T,
 ): void {
   const opts = { configurable: true, enumerable: true }
   const optsReset = { ...opts, writable: true }

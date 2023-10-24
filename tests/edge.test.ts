@@ -4,7 +4,7 @@ import axios from "axios"
 import { getSampleProject } from "./fixtures/get-sample-project"
 
 test("run edge function", async (t) => {
-  const {getNsmIndex} = await getSampleProject()
+  const { getNsmIndex } = await getSampleProject()
   const port = await getPort()
   const server = await getNsmIndex({ port })
 
@@ -14,13 +14,15 @@ test("run edge function", async (t) => {
 
   process.env.FOO_BAR = "baz"
 
-  const { data, status, headers } = await axios.get(`http://localhost:${port}/api/edge`)
+  const { data, status, headers } = await axios.get(
+    `http://localhost:${port}/api/edge`,
+  )
   t.deepEqual(data, {
     isFetchAvailable: true,
     areNodeBuiltinsAvailable: false,
     requestUrl: `http://localhost:${port}/api/edge`,
-    sourcePageFromEvent: '/api/edge',
-    fooBarEnvVar: "baz"
+    sourcePageFromEvent: "/api/edge",
+    fooBarEnvVar: "baz",
   })
 
   // Status was forwarded

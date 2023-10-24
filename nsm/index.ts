@@ -15,8 +15,7 @@ import type { NextApiHandler } from "./types/nextjs"
 import * as esbuild from "esbuild"
 import axios from "axios"
 import * as edge from "edge-runtime"
-import {environmentPlugin as esbuildEnvironmentPlugin} from "esbuild-plugin-environment"
-
+import { environmentPlugin as esbuildEnvironmentPlugin } from "esbuild-plugin-environment"
 
 const debug = Debug("nsm")
 
@@ -62,7 +61,13 @@ function resolveDynamicRoute(pathname: string, pages: string[]) {
 
 type Middleware = (next: NextApiHandler) => NextApiHandler
 
-export const runServer = async ({ port, middlewares = [] }: {port: number, middlewares?: Middleware[]}) => {
+export const runServer = async ({
+  port,
+  middlewares = [],
+}: {
+  port: number
+  middlewares?: Middleware[]
+}) => {
   debug(`starting server on port ${port}`)
 
   const routeMatcher = getRouteMatcher(routes)
@@ -79,7 +84,7 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
         ...(nextConfig as any).rewrites,
       },
       query,
-      (s) => resolveDynamicRoute(s, Object.keys(routes))
+      (s) => resolveDynamicRoute(s, Object.keys(routes)),
     )
     debug(`resolved request to "${resolveResult.parsedAs.pathname}"`)
 
@@ -134,15 +139,15 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
         write: false,
         external: [
           "next/dist/compiled/@vercel/og/*",
-          "next/dist/server/web/spec-extension/user-agent*"
+          "next/dist/server/web/spec-extension/user-agent*",
         ],
-        plugins: [
-          esbuildEnvironmentPlugin(Object.keys(process.env))
-        ]
+        plugins: [esbuildEnvironmentPlugin(Object.keys(process.env))],
       })
 
-      const runtime = new edge.EdgeRuntime({initialCode: result.outputFiles[0].text})
-      const edgeServer = await edge.runServer({runtime})
+      const runtime = new edge.EdgeRuntime({
+        initialCode: result.outputFiles[0].text,
+      })
+      const edgeServer = await edge.runServer({ runtime })
       const port = new URL(edgeServer.url).port
 
       const response = await axios.request({
@@ -168,7 +173,7 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
     throw new Error("unhandled")
 
     const wrappedServerFunc = (wrappers as any)(
-      ...[...middlewares, apiHandler?.default || apiHandler]
+      ...[...middlewares, serverFunc?.default || serverFunc],
     )
 
     wrappedServerFunc.config = apiHandler.config || {}
@@ -179,12 +184,12 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
       { ...query, ...match },
       wrappedServerFunc,
       {},
-      false
+      false,
     )
   })
 
   await new Promise<void>((resolve, reject) => {
-    server.once('error', (err) => {
+    server.once("error", (err) => {
       if (err) reject(err)
     })
     server.listen(port, () => {

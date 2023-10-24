@@ -21,7 +21,7 @@ export default function resolveRewrites(
   },
   query: ParsedUrlQuery,
   resolveHref: (path: string) => string,
-  locales?: string[]
+  locales?: string[],
 ): {
   matchedPage: boolean
   parsedAs: ReturnType<typeof parseRelativeUrl>
@@ -31,7 +31,7 @@ export default function resolveRewrites(
   let matchedPage = false
   let parsedAs = parseRelativeUrl(asPath)
   let fsPathname = removePathTrailingSlash(
-    normalizeLocalePath(delBasePath(parsedAs.pathname), locales).pathname
+    normalizeLocalePath(delBasePath(parsedAs.pathname), locales).pathname,
   )
   let resolvedHref
 
@@ -54,7 +54,7 @@ export default function resolveRewrites(
             }, {}),
         } as any,
         rewrite.has,
-        parsedAs.query
+        parsedAs.query,
       )
 
       if (hasParams) {
@@ -80,7 +80,7 @@ export default function resolveRewrites(
       Object.assign(query, destRes.parsedDestination.query)
 
       fsPathname = removePathTrailingSlash(
-        normalizeLocalePath(delBasePath(asPath), locales).pathname
+        normalizeLocalePath(delBasePath(asPath), locales).pathname,
       )
 
       if (pages.includes(fsPathname)) {

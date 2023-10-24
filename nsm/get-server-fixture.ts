@@ -34,7 +34,7 @@ async function getServerFixture(t: ExecutionContext, options: Options = {}) {
 
   const customAxios = axios.create({
     baseURL: serverURL,
-    ...options.axiosConfig
+    ...options.axiosConfig,
   })
 
   customAxios.interceptors.response.use(
@@ -42,7 +42,7 @@ async function getServerFixture(t: ExecutionContext, options: Options = {}) {
     (err) =>
       err instanceof AxiosError
         ? Promise.reject(new SimpleAxiosError(err))
-        : Promise.reject(err)
+        : Promise.reject(err),
   )
 
   return {

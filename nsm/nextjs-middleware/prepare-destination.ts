@@ -8,7 +8,7 @@ import { parseUrl } from "./parse-url"
 export function matchHas(
   req: IncomingMessage,
   has: RouteHas[],
-  query: any
+  query: any,
 ): false | any {
   const params: any = {}
 
@@ -83,16 +83,16 @@ export function compileNonPath(value: string, params: any): string {
       value = value
         .replace(
           new RegExp(`:${key}\\*`, "g"),
-          `:${key}--ESCAPED_PARAM_ASTERISKS`
+          `:${key}--ESCAPED_PARAM_ASTERISKS`,
         )
         .replace(
           new RegExp(`:${key}\\?`, "g"),
-          `:${key}--ESCAPED_PARAM_QUESTION`
+          `:${key}--ESCAPED_PARAM_QUESTION`,
         )
         .replace(new RegExp(`:${key}\\+`, "g"), `:${key}--ESCAPED_PARAM_PLUS`)
         .replace(
           new RegExp(`:${key}(?!\\w)`, "g"),
-          `--ESCAPED_PARAM_COLON${key}`
+          `--ESCAPED_PARAM_COLON${key}`,
         )
     }
   }
@@ -127,7 +127,7 @@ export function prepareDestination(args: {
   const parsedDestination = parseUrl(escapedDestination)
   const destQuery = parsedDestination.query
   const destPath = unescapeSegments(
-    `${parsedDestination.pathname!}${parsedDestination.hash || ""}`
+    `${parsedDestination.pathname!}${parsedDestination.hash || ""}`,
   )
   const destHostname = unescapeSegments(parsedDestination.hostname || "")
   const destPathParamKeys: any[] = []
@@ -148,7 +148,7 @@ export function prepareDestination(args: {
     // e.g. /something:hello(.*) -> /another/:hello is broken with validation
     // since compile validation is meant for reversing and not for inserting
     // params from a separate path-regex into another
-    { validate: false }
+    { validate: false },
   )
 
   const destHostnameCompiler = compile(destHostname, { validate: false })
@@ -159,17 +159,20 @@ export function prepareDestination(args: {
     // correctly
     if (Array.isArray(strOrArray)) {
       destQuery[key] = strOrArray.map((value) =>
-        compileNonPath(unescapeSegments(value), args.params)
+        compileNonPath(unescapeSegments(value), args.params),
       )
     } else {
-      destQuery[key] = compileNonPath(unescapeSegments(strOrArray!), args.params)
+      destQuery[key] = compileNonPath(
+        unescapeSegments(strOrArray!),
+        args.params,
+      )
     }
   }
 
   // add path params to query if it's not a redirect and not
   // already defined in destination query or path
   let paramKeys = Object.keys(args.params).filter(
-    (name) => name !== "nextInternalLocale"
+    (name) => name !== "nextInternalLocale",
   )
 
   if (
@@ -196,7 +199,7 @@ export function prepareDestination(args: {
   } catch (err: any) {
     if (err.message.match(/Expected .*? to not repeat, but got an array/)) {
       throw new Error(
-        `To use a multi-match in the destination you must add \`*\` at the end of the param name to signify it should repeat. https://nextjs.org/docs/messages/invalid-multi-match`
+        `To use a multi-match in the destination you must add \`*\` at the end of the param name to signify it should repeat. https://nextjs.org/docs/messages/invalid-multi-match`,
       )
     }
     throw err
@@ -240,7 +243,7 @@ function getSafeParamName(paramName: string) {
 function escapeSegment(str: string, segmentName: string) {
   return str.replace(
     new RegExp(`:${escapeStringRegexp(segmentName)}`, "g"),
-    `__ESC_COLON_${segmentName}`
+    `__ESC_COLON_${segmentName}`,
   )
 }
 
