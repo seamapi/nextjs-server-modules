@@ -18,7 +18,8 @@ export default async function handler(request: NextRequest, event: NextFetchEven
     isFetchAvailable: typeof fetch === "function",
     areNodeBuiltinsAvailable,
     requestUrl: request.url,
-    sourcePageFromEvent: event.sourcePage
+    sourcePageFromEvent: event.sourcePage,
+    fooBarEnvVar: process.env.FOO_BAR
   }, {
     headers: {
       "x-custom-header": "foo"

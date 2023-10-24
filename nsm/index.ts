@@ -15,6 +15,7 @@ import type { NextApiHandler } from "./types/nextjs"
 import * as esbuild from "esbuild"
 import axios from "axios"
 import * as edge from "edge-runtime"
+import {environmentPlugin as esbuildEnvironmentPlugin} from "esbuild-plugin-environment"
 
 
 const debug = Debug("nsm")
@@ -134,6 +135,9 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
         external: [
           "next/dist/compiled/@vercel/og/*",
           "next/dist/server/web/spec-extension/user-agent*"
+        ],
+        plugins: [
+          esbuildEnvironmentPlugin(Object.keys(process.env))
         ]
       })
 

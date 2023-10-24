@@ -71,6 +71,7 @@
   },
   "dependencies": {
     "edge-runtime": "2.5.4",
+    "esbuild-plugin-environment": "0.2.4",
     "find-up": "^5.0.0",
     "load-tsconfig": "^0.2.5",
     "recursive-copy": "^2.0.13",
