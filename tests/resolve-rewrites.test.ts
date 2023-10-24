@@ -18,7 +18,7 @@ test("resolve rewrites /health -> /api/health", async (t) => {
       fallback: [],
     },
     parseUrl("http://localhost:3000/health") as any,
-    (s) => s
+    (s) => s,
   )
 
   t.is(result.resolvedHref, "/api/health")

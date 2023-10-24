@@ -3,7 +3,7 @@
 import type { ParsedUrlQuery } from "querystring"
 
 export function searchParamsToUrlQuery(
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams,
 ): ParsedUrlQuery {
   const query: ParsedUrlQuery = {}
   searchParams.forEach((value, key) => {
@@ -31,7 +31,7 @@ function stringifyUrlQueryParam(param: string): string {
 }
 
 export function urlQueryToSearchParams(
-  urlQuery: ParsedUrlQuery
+  urlQuery: ParsedUrlQuery,
 ): URLSearchParams {
   const result = new URLSearchParams()
   Object.entries(urlQuery).forEach(([key, value]) => {

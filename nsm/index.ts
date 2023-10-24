@@ -57,7 +57,13 @@ function resolveDynamicRoute(pathname: string, pages: string[]) {
 
 type Middleware = (next: NextApiHandler) => NextApiHandler
 
-export const runServer = async ({ port, middlewares = [] }: {port: number, middlewares?: Middleware[]}) => {
+export const runServer = async ({
+  port,
+  middlewares = [],
+}: {
+  port: number
+  middlewares?: Middleware[]
+}) => {
   debug(`starting server on port ${port}`)
 
   const routeMatcher = getRouteMatcher(routes)
@@ -74,7 +80,7 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
         ...(nextConfig as any).rewrites,
       },
       query,
-      (s) => resolveDynamicRoute(s, Object.keys(routes))
+      (s) => resolveDynamicRoute(s, Object.keys(routes)),
     )
     debug(`resolved request to "${resolveResult.parsedAs.pathname}"`)
 
@@ -93,7 +99,7 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
     }
 
     const wrappedServerFunc = (wrappers as any)(
-      ...[...middlewares, serverFunc?.default || serverFunc]
+      ...[...middlewares, serverFunc?.default || serverFunc],
     )
 
     wrappedServerFunc.config = serverFunc.config || {}
@@ -104,12 +110,12 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
       { ...query, ...match },
       wrappedServerFunc,
       {},
-      false
+      false,
     )
   })
 
   await new Promise<void>((resolve, reject) => {
-    server.once('error', (err) => {
+    server.once("error", (err) => {
       if (err) reject(err)
     })
     server.listen(port, () => {

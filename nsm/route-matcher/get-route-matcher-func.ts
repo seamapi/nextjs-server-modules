@@ -3,7 +3,7 @@
 import { getRouteRegex } from "./route-regex"
 
 export function getRouteMatcherFunc(
-  routeRegex: ReturnType<typeof getRouteRegex>
+  routeRegex: ReturnType<typeof getRouteRegex>,
 ) {
   const { re, groups } = routeRegex
   return (pathname: string | null | undefined) => {

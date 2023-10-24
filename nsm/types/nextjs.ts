@@ -69,7 +69,7 @@ export type NextApiResponse<T = any> = ServerResponse & {
        * the path is considered the "default path", i.e., any pages under "/".
        */
       path?: string
-    }
+    },
   ) => NextApiResponse<T>
 
   /**
@@ -86,7 +86,7 @@ export type NextApiResponse<T = any> = ServerResponse & {
     urlPath: string,
     opts?: {
       unstable_onlyGenerated?: boolean
-    }
+    },
   ) => Promise<void>
 }
 
@@ -95,7 +95,7 @@ export type NextApiResponse<T = any> = ServerResponse & {
  */
 export type NextApiHandler<T = any> = (
   req: NextApiRequest,
-  res: NextApiResponse<T>
+  res: NextApiResponse<T>,
 ) => unknown | Promise<unknown>
 
 // https://github.com/vercel/next.js/blob/e2c5952ef2fa03d4fb6dc4cb7ff50d26c76e7ea8/packages/next/lib/load-custom-routes.ts

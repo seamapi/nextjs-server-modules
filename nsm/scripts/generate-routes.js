@@ -27,8 +27,8 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
     if (isInvalidExtension) {
       throw new Error(
         `Invalid file extension for page: ${pageFile}, must be one of: ${VALID_EXTENSIONS.join(
-          ", "
-        )}. Found: ${pageName.ext}`
+          ", ",
+        )}. Found: ${pageName.ext}`,
       )
     }
 
@@ -38,7 +38,7 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
 
     const filePathWithoutExtension = path.join(
       parsedPagePath.dir,
-      filenameWithoutExtension
+      filenameWithoutExtension,
     )
 
     manifest[`/${filePathWithoutExtension}`] = `pages/${relativePagePath}`
@@ -65,7 +65,7 @@ function getStaticRoutesFiles({ nextless, staticFiles }) {
        (fp) =>
          `"/_next/${fp}": serveStatic("${
            fp.split(".").slice(-1)[0]
-         }", require("./generated_static/${fp}.ts").default)`
+         }", require("./generated_static/${fp}.ts").default)`,
      )}`
 }
 
@@ -93,7 +93,7 @@ async function generateRouteFile({
 
       if (!onlyApiFiles && !fp.startsWith("pages/api")) {
         throw new Error(
-          `At the moment, only API routes are supported. Found: ${fp}`
+          `At the moment, only API routes are supported. Found: ${fp}`,
         )
       }
 
@@ -119,7 +119,7 @@ async function generateRouteFile({
 }
 
 `,
-    { semi: false, parser: "babel" }
+    { semi: false, parser: "babel" },
   )
 }
 
@@ -145,7 +145,7 @@ export async function generateNsmRoutes({ onlyApiFiles = false, skipBuild }) {
 
   await fs.writeFile(
     path.resolve(__dirname, "../generated_routes.ts"),
-    routesFile
+    routesFile,
   )
 }
 
@@ -160,12 +160,12 @@ async function generateRoutes({ onlyApiFiles = false }) {
       (await glob("**/*", { cwd: pagesDir, nodir: true }))
         .filter((fp) => !fp.startsWith("api"))
         .filter((fp) => !fp.endsWith(".nft.json"))
-        .map((fp) => `server/pages/${fp}`)
+        .map((fp) => `server/pages/${fp}`),
     )
     .filter((fp) => fp.includes("."))
 
   const pagesManifest = JSON.parse(
-    await fs.readFile(path.resolve(pagesDir, "../pages-manifest.json"))
+    await fs.readFile(path.resolve(pagesDir, "../pages-manifest.json")),
   )
 
   for (const fp of staticFiles) {
@@ -175,7 +175,7 @@ async function generateRoutes({ onlyApiFiles = false }) {
     const outFilePath = path.resolve(
       __dirname,
       "../generated_static",
-      `${fp}.ts`
+      `${fp}.ts`,
     )
     const outFileContent = `export default Buffer.from(\`${fileContentB64}\`, "base64")`
     await mkdirp(path.dirname(outFilePath))
@@ -199,7 +199,7 @@ async function generateRoutes({ onlyApiFiles = false }) {
 
   await fs.writeFile(
     path.resolve(__dirname, "../generated_routes.ts"),
-    routesFile
+    routesFile,
   )
 }
 
