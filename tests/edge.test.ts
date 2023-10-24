@@ -16,7 +16,8 @@ test("run edge function", async (t) => {
   t.deepEqual(data, {
     isFetchAvailable: true,
     areNodeBuiltinsAvailable: false,
-    requestUrl: `http://localhost:${port}/api/edge`
+    requestUrl: `http://localhost:${port}/api/edge`,
+    sourcePageFromEvent: '/api/edge'
   })
 
   // Status was forwarded

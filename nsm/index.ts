@@ -103,6 +103,7 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
       // todo: set dynamically
       const page = "/api/edge"
 
+      // todo: cache result?
       const result = await esbuild.build({
         stdin: {
           contents: `
@@ -125,11 +126,15 @@ export const runServer = async ({ port, middlewares = [] }: {port: number, middl
           loader: "ts",
         },
         bundle: true,
-        format: "iife",
+        format: "esm",
         banner: {
-          js: "const process = {env: {}};",
+          js: "const process = {env: {}};const require = () => ({})",
         },
-        write: false
+        write: false,
+        external: [
+          "next/dist/compiled/@vercel/og/*",
+          "next/dist/server/web/spec-extension/user-agent*"
+        ]
       })
 
       const runtime = new edge.EdgeRuntime({initialCode: result.outputFiles[0].text})
