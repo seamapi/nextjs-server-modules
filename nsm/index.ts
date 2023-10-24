@@ -171,6 +171,8 @@ export const runServer = async ({
       res.statusCode = response.status
       res.end(Buffer.from(response.data))
 
+      await edgeServer.close()
+
       return
     }
 
