@@ -111,8 +111,7 @@ export const runServer = async ({
         : pathOrFunction
 
     if (apiHandler.config?.runtime === "edge") {
-      // todo: set dynamically
-      const page = "/api/edge"
+      const page = resolveResult.asPath
 
       // todo: cache result?
       const result = await esbuild.build({
