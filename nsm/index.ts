@@ -88,22 +88,27 @@ export const runServer = async ({
     )
     debug(`resolved request to "${resolveResult.parsedAs.pathname}"`)
 
-    // todo: rename serverFunc
-    const { serverFunc, match, fsPath } =
+    const { pathOrFunction, match, fsPath } =
       routeMatcher(resolveResult.parsedAs.pathname) || {}
 
-    if (typeof serverFunc === "string" && serverFunc.endsWith(".html")) {
+    if (
+      typeof pathOrFunction === "string" &&
+      pathOrFunction.endsWith(".html")
+    ) {
       res.statusCode = 200
-      res.end(await fs.readFile(serverFunc))
+      res.end(await fs.readFile(pathOrFunction))
       return
     }
-    if (!serverFunc) {
+    if (!pathOrFunction) {
       res.statusCode = 404
       res.end("404") // TODO use routes 404
       return
     }
 
-    const apiHandler = require(serverFunc)
+    const apiHandler =
+      typeof pathOrFunction === "string"
+        ? require(pathOrFunction)
+        : pathOrFunction
 
     if (apiHandler.config?.runtime === "edge") {
       // todo: set dynamically
@@ -116,7 +121,7 @@ export const runServer = async ({
             import {NextRequest} from "next/dist/server/web/spec-extension/request"
             import {NextFetchEvent} from "next/dist/server/web/spec-extension/fetch-event"
 
-            import handler from "${serverFunc}"
+            import handler from "${pathOrFunction}"
 
             if (typeof handler !== 'function') {
               throw new Error('The Edge Function "pages${page}" must export a \`default\` function');
@@ -170,10 +175,8 @@ export const runServer = async ({
       return
     }
 
-    throw new Error("unhandled")
-
     const wrappedServerFunc = (wrappers as any)(
-      ...[...middlewares, serverFunc?.default || serverFunc],
+      ...[...middlewares, apiHandler?.default || apiHandler],
     )
 
     wrappedServerFunc.config = apiHandler.config || {}
