@@ -63,7 +63,7 @@ function getStaticRoutesFiles({ nextless, staticFiles }) {
     ? ""
     : `,
    ${staticFiles
-     .filter((fp) => fp.startsWith("static/"))
+     .filter((fp) => fp.startsWith("static"))
      .map(
        (fp) =>
          `"/_next/${fp}": serveStatic("${
@@ -168,12 +168,12 @@ async function generateRoutes({ onlyApiFiles = false }) {
   const staticDir = path.resolve(nextDir, "static")
 
   const staticFiles = (await glob("**/*", { cwd: staticDir, nodir: true }))
-    .map((fp) => `static/${fp}`)
+    .map((fp) => path.join('static', fp))
     .concat(
       (await glob("**/*", { cwd: pagesDir, nodir: true }))
         .filter((fp) => !fp.startsWith("api"))
         .filter((fp) => !fp.endsWith(".nft.json"))
-        .map((fp) => `server/pages/${fp}`),
+        .map((fp) => path.join('server', 'pages', fp)),
     )
     .filter((fp) => fp.includes("."))
 
