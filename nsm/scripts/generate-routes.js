@@ -36,10 +36,12 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
       .replace(parsedPagePath.ext, "")
       .replace("index", "")
 
-    const filePathWithoutExtension = path.posix.join(
+    const filePathWithoutExtension = path.join(
       parsedPagePath.dir,
       filenameWithoutExtension,
     )
+
+    console.log({ filePathWithoutExtension })
 
     manifest[`/${filePathWithoutExtension}`] = `pages/${relativePagePath}`
   }
@@ -65,7 +67,7 @@ function getStaticRoutesFiles({ nextless, staticFiles }) {
        (fp) =>
          `"/_next/${fp}": serveStatic("${
            fp.split(".").slice(-1)[0]
-         }", require("./generated_static/${fp}.ts").default)`,
+         }", require(path.resolve(__dirname, "./generated_static/${fp}.ts")).default)`,
      )}`
 }
 
@@ -84,6 +86,7 @@ async function generateRouteFile({
   return await prettier.format(
     `// @ts-nocheck
     import serveStatic from "./serve-static"
+    import path from "node:path"
     export default {
   ${Object.entries(pagesManifest)
     .filter(([route, fp]) => {
