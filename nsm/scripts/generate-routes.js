@@ -58,6 +58,7 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
 }
 
 function getStaticRoutesFiles({ nextless, staticFiles }) {
+  console.log("static files", JSON.stringify(staticFiles, null, 2))
   return nextless
     ? ""
     : `,
