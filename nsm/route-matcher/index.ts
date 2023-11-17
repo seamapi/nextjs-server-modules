@@ -21,7 +21,13 @@ export default (routeMapping: any) => {
 
   // TODO sort routes to fix precedence
 
-  return (incomingPath: string) => {
+  return (
+    incomingPath: string,
+  ): {
+    pathOrFunction: string | { fsPath: string; module: any }
+    match: any
+    fsPath: string
+  } | null => {
     for (const { pathOrFunction, matcherFunc, fsPath } of routes) {
       const match = matcherFunc(incomingPath)
       if (match) {

@@ -69,6 +69,9 @@ function getStaticRoutesFiles({ nextless, staticFiles }) {
      )}`
 }
 
+const isApiRoute = (filepath) =>
+  filepath.startsWith("pages/api") || filepath.startsWith("src/pages/api")
+
 async function generateRouteFile({
   pagesDirRelativePath,
   pagesManifest,
@@ -91,15 +94,15 @@ async function generateRouteFile({
         return true
       }
 
-      if (!onlyApiFiles && !fp.startsWith("pages/api")) {
+      if (!onlyApiFiles && !isApiRoute(fp)) {
         throw new Error(
           `At the moment, only API routes are supported. Found: ${fp}`,
         )
       }
 
       if (
-        (onlyApiFiles && !fp.startsWith("pages/api")) ||
-        (!nextless && onlyApiFiles && !fp.startsWith("pages/api"))
+        (onlyApiFiles && !isApiRoute(fp)) ||
+        (!nextless && onlyApiFiles && !isApiRoute(fp))
       ) {
         return false
       }
@@ -110,15 +113,8 @@ async function generateRouteFile({
       const fpNoExt = fp.split(".").slice(0, -1).join(".")
       const fpExt = fpNoExt.split(".").slice(-1)[0]
 
-      if (fp.startsWith("pages/api")) {
-        const absolutePath = path.join(
-          __dirname,
-          "../",
-          pagesDirRelativePath,
-          fpNoExt,
-        )
-
-        return `"${route}": "${absolutePath}"`
+      if (isApiRoute(fp)) {
+        return `"${route}": {module: require("${pagesDirRelativePath}/${fpNoExt}"), fsPath: "${pagesDirRelativePath}/${fpNoExt}"}`
       } else {
         return `"${route}": serveStatic("${fpExt}", require("./generated_static/server/${fp}.ts").default)`
       }
