@@ -111,14 +111,7 @@ async function generateRouteFile({
       const fpExt = fpNoExt.split(".").slice(-1)[0]
 
       if (fp.startsWith("pages/api")) {
-        const absolutePath = path.join(
-          __dirname,
-          "../",
-          pagesDirRelativePath,
-          fpNoExt,
-        )
-
-        return `"${route}": "${absolutePath}"`
+        return `"${route}": {module: require("${pagesDirRelativePath}/${fpNoExt}"), fsPath: "${pagesDirRelativePath}/${fpNoExt}"}`
       } else {
         return `"${route}": serveStatic("${fpExt}", require("./generated_static/server/${fp}.ts").default)`
       }

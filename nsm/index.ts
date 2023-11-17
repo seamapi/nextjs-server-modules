@@ -108,6 +108,8 @@ export const runServer = async ({
     const apiHandler =
       typeof pathOrFunction === "string"
         ? require(pathOrFunction)
+        : "module" in pathOrFunction
+        ? pathOrFunction.module
         : pathOrFunction
 
     if (apiHandler.config?.runtime === "edge") {
@@ -120,7 +122,7 @@ export const runServer = async ({
             import {NextRequest} from "next/dist/server/web/spec-extension/request"
             import {NextFetchEvent} from "next/dist/server/web/spec-extension/fetch-event"
 
-            import handler from "${pathOrFunction}"
+            import handler from "${pathOrFunction.fsPath}"
 
             if (typeof handler !== 'function') {
               throw new Error('The Edge Function "pages${page}" must export a \`default\` function');
