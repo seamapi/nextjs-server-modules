@@ -52,6 +52,20 @@ const server = await myNextJSModule({
 server.close()
 ```
 
+### Common Scripts
+
+Many times you'll want to add `nsm` when you start testing API endpoints on a
+NextJS project, it makes a lot of sense to use `nextless` and `skip-build` which
+runs a very fast build.
+
+```json
+{
+  "scripts": {
+    "build:test": "nsm build --nextless --skip-build --only-api-files"
+  }
+}
+```
+
 ## Internal: How it Works
 
 > Not all NextJS features are currently supported. Particularly:
