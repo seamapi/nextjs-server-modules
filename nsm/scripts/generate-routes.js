@@ -41,6 +41,8 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
       filenameWithoutExtension,
     )
 
+    console.log({ filePathWithoutExtension })
+
     manifest[`/${filePathWithoutExtension}`] = `pages/${relativePagePath}`
   }
 
@@ -56,16 +58,17 @@ async function generateNsmPagesManifest(rootDir, outputDir) {
 }
 
 function getStaticRoutesFiles({ nextless, staticFiles }) {
+  console.log("static files", JSON.stringify(staticFiles, null, 2))
   return nextless
     ? ""
     : `,
    ${staticFiles
-     .filter((fp) => fp.startsWith("static/"))
+     .filter((fp) => fp.startsWith("static"))
      .map(
        (fp) =>
          `"/_next/${fp}": serveStatic("${
            fp.split(".").slice(-1)[0]
-         }", require("./generated_static/${fp}.ts").default)`,
+         }", require(path.resolve(__dirname, "./generated_static/${fp}.ts")).default)`,
      )}`
 }
 
@@ -87,6 +90,7 @@ async function generateRouteFile({
   return await prettier.format(
     `// @ts-nocheck
     import serveStatic from "./serve-static"
+    import path from "node:path"
     export default {
   ${Object.entries(pagesManifest)
     .filter(([route, fp]) => {
@@ -160,12 +164,12 @@ async function generateRoutes({ onlyApiFiles = false }) {
   const staticDir = path.resolve(nextDir, "static")
 
   const staticFiles = (await glob("**/*", { cwd: staticDir, nodir: true }))
-    .map((fp) => `static/${fp}`)
+    .map((fp) => path.join('static', fp))
     .concat(
       (await glob("**/*", { cwd: pagesDir, nodir: true }))
         .filter((fp) => !fp.startsWith("api"))
         .filter((fp) => !fp.endsWith(".nft.json"))
-        .map((fp) => `server/pages/${fp}`),
+        .map((fp) => path.join('server', 'pages', fp)),
     )
     .filter((fp) => fp.includes("."))
 
