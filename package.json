@@ -80,5 +80,9 @@
     "rmfr": "^2.0.0",
     "tsup": "^7.1.0",
     "yargs": "^17.3.1"
+  },
+  "resolutions": {
+    "next/postcss": "^8.5.23",
+    "**/path-to-regexp": "^6.3.0"
   }
 }
